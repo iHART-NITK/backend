@@ -23,6 +23,7 @@ mysql -u <username> -p
 
 cd ihart_backend
 cp '.env example' .env
+# fill up the .env file with your local info
 python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver 3000
