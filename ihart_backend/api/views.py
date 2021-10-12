@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from .models import User
 
 # Create your views here.
-
+@login_required(login_url="/login")
 def index(request):
     users = User.objects.all()
     user_json = serializers.serialize('json', users)
