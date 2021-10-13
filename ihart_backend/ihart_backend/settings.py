@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv('PROJECT_SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'api.User'
 
@@ -93,7 +93,7 @@ DATABASES = {
         'PASSWORD': os.getenv('DATABASE_PASS'),
         'HOST': os.getenv('DATABASE_HOST'),
         'PORT': os.getenv('DATABASE_PORT'),
-        'OPTIONS': {'ssl': {'ca':'/code/auctions/BaltimoreCyberTrustRoot.crt.pem'}}
+        'OPTIONS': {'ssl': {'ca':'/ihart_backend/ihart_backend/BaltimoreCyberTrustRoot.crt.pem'}}
     }
 }
 
