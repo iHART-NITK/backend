@@ -1,50 +1,69 @@
-from django.shortcuts import render
-from django.core import serializers
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
-from django.contrib.auth import authenticate, login, logout
-from django.urls import reverse
-from django.contrib.auth.decorators import login_required
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
 
 from .models import User
+from .serializers import UserSerializer
 
-# Create your views here.
-@login_required(login_url="/login")
-def index(request):
-    users = User.objects.all()
-    user_json = serializers.serialize('json', users)
-    return HttpResponse(user_json, content_type="application/json")
+@api_view(['GET'])
+def listApis(request):
+    # Describe all API routes
+    routes = [
+        {
+            "endpoint": "/api/list-apis/",
+            "methods": "GET",
+            "body": None,
+            "description": "List all accessible API endpoints",
+            "is_authenticated": False
+        },
+        {
+            "endpoint": "/api/register/",
+            "methods": "POST",
+            "body": "username, password, email, first_name, last_name",
+            "description": "Registers a new user and generates an auth token for the user",
+            "is_authenticated": False
+        },
+        {
+            "endpoint": "/api/token-auth/",
+            "methods": "POST",
+            "body": "username, password",
+            "description": "Verifies a user's credentials and returns the auth token associated with the user if credentials are valid",
+            "is_authenticated": False
+        },
+        {
+            "endpoint": "/api/test/",
+            "methods": "GET",
+            "body": None,
+            "description": "Test API that requires authentication",
+            "is_authenticated": True
+        }
+    ]
 
-# Login view of the web application
-def login_view(request):
-    # If user tried to access this page by submitting the login form
-    if request.method == 'POST':
-        # Retrieve the username and password from the POST parameters
-        username = request.POST['username']
-        password = request.POST['password']
+    return Response(routes)
 
-        # Authenticate the user by comparing the username and password to the data available in the database
-        # SQL : SELECT * FROM user WHERE username={username} AND password={hash(password)}
-        user = authenticate(request, username=username, password=password)
 
-        # If the user exists and the password is valid, login the user and redirect them to the index page
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect(reverse(index))
-        # If the authenticate function did not return a user, then the input data is invalid
-        # Render the login page again with error message
-        else:
-            return render(request, 'api/login.html', {
-                'message': 'Invalid Username or Password.',
-            })
-    
-    # If the user tried to access this page by clicking the login link
-    return render(request, 'api/login.html')
-
-# Logout view of the web application
-def logout_view(request):
-    # Logout the user, and redirect them back to the index page
-    logout(request)
-    return HttpResponseRedirect(reverse('index'))
-
+@api_view(['POST'])
 def register(request):
-    pass
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        # Create new user
+        user = serializer.create(validated_data=request.data)
+        token = Token.objects.create(user=user)
+
+        # Generate the response
+        response = {"Authorization": f"Token {token.key}"}
+        response.update(serializer.data)
+        return Response(response)
+    else:
+        return Response({
+            "error": True,
+            "error_msg": "Invalid details"
+        })
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def test(request):
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)

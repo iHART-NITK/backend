@@ -1,9 +1,11 @@
 # iHART
+
 > A Distributed, Real-Time Cross Platform Application for Healthcare Management and Automation
 
-**iHART** is a software product that provides an interface for students and faculty of NITK to access healthcare facilities on campus. It also helps the HCC staff manage their work and documents better. 
+**iHART** is a software product that provides an interface for students and faculty of NITK to access healthcare facilities on campus. It also helps the HCC staff manage their work and documents better.
 
 ## Product Scope
+
 * Scheduling appointments with doctors on campus.
 * Request for ambulance service in a medical emergency.
 * Upload prescription for regular medication.
@@ -12,6 +14,7 @@
 * Offer QR Code based verification of sick leave certificates issued by HCC.
 
 ## Installation Steps for Localhost Setup
+
 ```bash
 pip install django
 pip install mysqlclient
