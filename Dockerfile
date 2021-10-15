@@ -6,4 +6,4 @@ RUN pip install -r ./requirements.txt
 
 WORKDIR /ihart_backend
 
-CMD python manage.py runserver 0.0.0.0:8000
+CMD python manage.py runserver 0.0.0.0:80
