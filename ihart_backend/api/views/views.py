@@ -39,6 +39,13 @@ def listApis(request):
             "body": None,
             "description": "Test API that requires authentication",
             "is_authenticated": True
+        },
+        {
+            "endpoint": "/api/emergency/locations",
+            "methods": "GET",
+            "body": None,
+            "description": "Test API that requires authentication",
+            "is_authenticated": True
         }
     ]
 

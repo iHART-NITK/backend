@@ -35,6 +35,8 @@ AUTH_USER_MODEL = 'api.User'
 
 # Application definition
 
+CORS_ORIGIN_ALLOW_ALL=True
+
 INSTALLED_APPS = [
     'api',
     'django.contrib.admin',
@@ -43,12 +45,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -148,3 +152,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
 }
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:7357'
+]
