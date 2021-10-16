@@ -58,3 +58,17 @@ def create(request):
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
+
+@csrf_exempt
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def medicalHistoriesByUser(request,pk):
+    if request.user.id != pk and not perms(request,pk):
+        return Response("Not Autherized to access Medical Histories.",status=401)
+    user = User.objects.get(id = pk)
+    if user :
+        data = MedicalHistory.objects.filter(user = user)
+        serializer = MedicalHistorySerializer(data, many=True)
+        return Response(serializer.data)
+    else:
+        return Response("User not found",status=404)

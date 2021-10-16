@@ -46,7 +46,35 @@ def listApis(request):
             "body": None,
             "description": "Test API that requires authentication",
             "is_authenticated": True
-        }
+        },
+        {
+            "endpoint": "/api/<resource>",
+            "methods": "GET",
+            "body": None,
+            "description": "Retrieve all objects of model",
+            "is_authenticated": True
+        },
+        {
+            "endpoint": "/api/<resource>/<int:pk>",
+            "methods": "GET,POST,DELETE",
+            "body": "depends on method and resource",
+            "description": "interact with individual object of resource/model with that id",
+            "is_authenticated": True
+        },
+        {
+            "endpoint": "/api/<resource>/create",
+            "methods": "POST",
+            "body": "depends on model/resource",
+            "description": "Create a new object in the model( user model does not have this endpoint)",
+            "is_authenticated": True
+        },
+        {
+            "endpoint": "/api/<resource>/user/<int:pk>",
+            "methods": "GET",
+            "body": None,
+            "description": "Retrieve all objects of model with user having id = pk",
+            "is_authenticated": True
+        },
     ]
 
     return Response(routes)
