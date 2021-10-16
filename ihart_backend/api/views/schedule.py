@@ -46,10 +46,13 @@ def schedule(request,pk):
             data.delete()
             return Response("Schedule deleted successfully!",status = 200)
     else:
-        if request.method == 'POST':
-            serializer = ScheduleSerializer(data = request.data)
-            if serializer.is_valid():
-                serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response("Schedule not found!",status = 404)
+        return Response("Schedule not found!",status = 404)
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create(request):
+    serializer = ScheduleSerializer(data = request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)

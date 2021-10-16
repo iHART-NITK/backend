@@ -48,10 +48,13 @@ def medicalHistory(request,pk):
             data.delete()
             return Response("Medical history deleted successfully!",status = 200)
     else:
-        if request.method == 'POST':
-            serializer = MedicalHistorySerializer(data = request.data)
-            if serializer.is_valid():
-                serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response("Medical History not found!",status = 404)
+        return Response("Medical History not found!",status = 404)
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create(request):
+    serializer = MedicalHistorySerializer(data = request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)

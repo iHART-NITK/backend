@@ -29,7 +29,6 @@ class MedicalHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = MedicalHistory
         fields = (
-            'CATEGORY_CHOICES',
             'user',
             'category',
             'description'
@@ -40,7 +39,6 @@ class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
         fields = (
-            'DAY_CHOICES',
             'user',
             'entry_time',
             'exit_time', 
@@ -52,7 +50,6 @@ class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = (
-            'STATUS_CHOICES',
             'schedule',
             'user',
             'start_time',

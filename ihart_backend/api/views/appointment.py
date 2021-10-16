@@ -51,11 +51,13 @@ def appointment(request,pk):
             data.delete()
             return Response("Appointment deleted successfully!",status = 200)
     else:
-        # creating appointment
-        if request.method == 'POST':
-            serializer = AppointmentSerializer(data = request.data)
-            if serializer.is_valid():
-                serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response("Appointment not found!",status = 404)
+        return Response("Appointment not found!",status = 404)
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create(request):
+    serializer = AppointmentSerializer(data = request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
