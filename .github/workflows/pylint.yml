@@ -18,5 +18,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install pylint
     - name: Analysing the code with pylint
+      continue-on-error: true
       run: |
         pylint `find . -type d -name migrations -prune -o -name '*.py'| grep -v __ |xargs`
+        
