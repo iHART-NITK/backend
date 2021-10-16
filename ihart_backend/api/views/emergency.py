@@ -25,7 +25,6 @@ def locations(request):
     location_hash = {}
     for abbr, loc in data:
         location_hash.setdefault(abbr, loc)
-    print(location_hash.__class__)
     return Response(str(location_hash))
 
 @csrf_exempt
