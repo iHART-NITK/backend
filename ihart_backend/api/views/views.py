@@ -69,7 +69,7 @@ def listApis(request):
             "is_authenticated": True
         },
         {
-            "endpoint": "/api/<resource>/user/<int:pk>",
+            "endpoint": "/api/user/<int:pk>/<resource>",
             "methods": "GET",
             "body": None,
             "description": "Retrieve all objects of model with user having id = pk",
@@ -97,9 +97,3 @@ def register(request):
             "error": True,
             "error_msg": "Invalid details"
         })
-
-@csrf_exempt
-@api_view(['GET'])
-def emergency_choices(request):
-    obj = Emergency.objects.first()
-    return Response({f"{str(obj.LOCATION_CHOICES)}"})

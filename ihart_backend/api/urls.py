@@ -6,7 +6,6 @@ from .views import views, users, medicalHistory, schedule, appointment, diagnosi
 urlpatterns = [
     path('list-apis/', views.listApis, name="list-apis"),
     path('register/', views.register, name="register"),
-    path('emergency/choices/',views.emergency_choices, name="emergency-choices"),
     path('token-auth/', restViews.obtain_auth_token, name="token-auth"),
 
     path('user/', users.users, name="users"),
@@ -15,7 +14,7 @@ urlpatterns = [
     path('medical-history/', medicalHistory.medicalHistories, name="medical-histories"),
     path('medical-history/<int:pk>/', medicalHistory.medicalHistory, name="medical-history"),
     path('medical-history/create/',medicalHistory.create, name="medical-history-create"),
-    path('medical-history/user/<int:pk>/',medicalHistory.medicalHistoriesByUser, name="medical-histories-by-user"),
+    path('user/<int:pk>/medical-history/',medicalHistory.medicalHistoriesByUser, name="medical-histories-by-user"),
 
     path('schedule/', schedule.schedules, name="schedules"),
     path('schedule/<int:pk>/', schedule.schedule, name="schedule"),
