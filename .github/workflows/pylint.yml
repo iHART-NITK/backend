@@ -19,4 +19,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint `find . -type d -name migrations -prune -o -name '*.py'$|xargs`
+        pylint `find . -type d -name migrations -prune -o -name '*.py'| grep -v __ |xargs`
