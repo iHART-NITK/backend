@@ -22,15 +22,15 @@ def users(request):
     if not perms(request):
         return Response("Not Autherized to access profiles.",status=401)
     users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data)
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)
 
 
 @csrf_exempt
 @api_view(['GET','POST','DELETE'])
 @permission_classes([IsAuthenticated])
 def user(request,pk):
-    if request.user.id != pk and not perms(request,pk):
+    if request.user.id != pk and not perms(request):
         return Response("Not Autherized to access profile.",status=401)
     user = User.objects.get(id = pk)
     if request.method == 'GET':
