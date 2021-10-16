@@ -48,10 +48,13 @@ def diagnosis(request,pk):
             data.delete()
             return Response("DIagnosis deleted successfully!",status = 200)
     else:
-        if request.method == 'POST':
-            serializer = DiagnosisSerializer(data = request.data)
-            if serializer.is_valid():
-                serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response("Diagnosis not found!",status = 404)
+        return Response("Diagnosis not found!",status = 404)
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create(request):
+    serializer = DiagnosisSerializer(data = request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)

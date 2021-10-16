@@ -48,10 +48,13 @@ def prescription(request,pk):
             data.delete()
             return Response("Prescription deleted successfully!",status = 200)
     else:
-        if request.method == 'POST':
-            serializer = PrescriptionSerializer(data = request.data)
-            if serializer.is_valid():
-                serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response("Prescription not found!",status = 404)
+        return Response("Prescription not found!",status = 404)
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create(request):
+    serializer = PrescriptionSerializer(data = request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)

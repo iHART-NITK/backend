@@ -5,7 +5,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from django.views.decorators.csrf import csrf_exempt
 
-
+from ..models import Emergency
 from .serializers import UserSerializer
 
 @api_view(['GET'])
@@ -70,4 +70,8 @@ def register(request):
             "error_msg": "Invalid details"
         })
 
-
+@csrf_exempt
+@api_view(['GET'])
+def emergency_choices(request):
+    obj = Emergency.objects.first()
+    return Response({f"{str(obj.LOCATION_CHOICES)}"})

@@ -32,10 +32,10 @@ def medicalHistories(request):
 def medicalHistory(request,pk):
     if request.user.id != pk and not perms(request,pk):
         return Response("Not Autherized to access Medical History.",status=401)
-    data = MedicalHistory.objects.get(id = pk)
+    data = MedicalHistory.objects.filter(id = pk)
     if data:
         if request.method == 'GET':
-            serializer = MedicalHistorySerializer(data, many=False)
+            serializer = MedicalHistorySerializer(data, many=True)
             return Response(serializer.data)
         if not perms(request,pk):
             return Response("Not Autherized to edit Medical History.",status=401)
@@ -48,10 +48,13 @@ def medicalHistory(request,pk):
             data.delete()
             return Response("Medical history deleted successfully!",status = 200)
     else:
-        if request.method == 'POST':
-            serializer = MedicalHistorySerializer(data = request.data)
-            if serializer.is_valid():
-                serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response("Medical History not found!",status = 404)
+        return Response("Medical History not found!",status = 404)
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create(request):
+    serializer = MedicalHistorySerializer(data = request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
