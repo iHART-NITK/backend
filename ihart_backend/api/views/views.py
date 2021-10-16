@@ -6,7 +6,6 @@ from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from django.views.decorators.csrf import csrf_exempt
 
 
-from .models import User
 from .serializers import UserSerializer
 
 @api_view(['GET'])

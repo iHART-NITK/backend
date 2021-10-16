@@ -5,7 +5,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from django.views.decorators.csrf import csrf_exempt
 
-from ./../models import Prescription,User
+from ..models import Prescription,User
 from .serializers import PrescriptionSerializer
 
 non_admin_staff = []

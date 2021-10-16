@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from ./../models import User,Inventory,Emergency,MedicalHistory,Schedule,Appointment,Diagnosis,Prescription
+from ..models import User, Inventory, Emergency, MedicalHistory, Schedule, Appointment, Diagnosis, Prescription
 
 class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
@@ -25,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
 class MedicalHistorySerializer(serializers.ModelSerializer):
- 
+
     class Meta:
         model = MedicalHistory
         fields = (
@@ -36,7 +36,7 @@ class MedicalHistorySerializer(serializers.ModelSerializer):
         )
 
 class ScheduleSerializer(serializers.ModelSerializer):
- 
+
     class Meta:
         model = Schedule
         fields = (
@@ -48,7 +48,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
         )
 
 class AppointmentSerializer(serializers.ModelSerializer):
- 
+
     class Meta:
         model = Appointment
         fields = (
@@ -60,8 +60,8 @@ class AppointmentSerializer(serializers.ModelSerializer):
             'create_time'
         )
 
-class DIagnosisSerializer(serializers.ModelSerializer):
- 
+class DiagnosisSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Diagnosis
         fields = (
@@ -70,7 +70,7 @@ class DIagnosisSerializer(serializers.ModelSerializer):
         )
 
 class PrescriptionSerializer(serializers.ModelSerializer):
- 
+
     class Meta:
         model = Prescription
         fields = (

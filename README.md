@@ -1,4 +1,4 @@
-# iHART 
+# iHART
 
 > A Distributed, Real-Time Cross Platform Application for Healthcare Management and Automation
 
