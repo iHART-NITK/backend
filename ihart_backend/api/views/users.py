@@ -16,18 +16,14 @@ def perms(request):
     return True
 
 @csrf_exempt
-@api_view(['GET','DELETE'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def users(request):
     if not perms(request):
         return Response("Not Autherized to access profiles.",status=401)
     users = User.objects.all()
-    if request.method == 'GET':
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
-    elif request.method == 'DELETE':
-        count = users.delete()
-        return Response("'message': '{} Users were deleted successfully!'.format(count[0])",status = 200)
 
 
 @csrf_exempt

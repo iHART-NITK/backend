@@ -17,19 +17,14 @@ def perms(request):
     return True
 
 @csrf_exempt
-@api_view(['GET','DELETE'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def prescriptions(request):
     if not perms(request):
         return Response("Not Autherized to access prescriptions.",status=401)
     data = Prescription.objects.all()
-    if request.method == 'GET':
-        serializer = PrescriptionSerializer(data, many=True)
-        return Response(serializer.data)
-    elif request.method == 'DELETE':
-        count = data.delete()
-        return Response("'message': '{} prescriptions were deleted successfully!'.format(count[0])",status = 200)
-
+    serializer = PrescriptionSerializer(data, many=True)
+    return Response(serializer.data)
 
 @csrf_exempt
 @api_view(['GET','POST','DELETE'])

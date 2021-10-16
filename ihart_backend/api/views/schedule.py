@@ -16,18 +16,14 @@ def perms(request):
     return True
 
 @csrf_exempt
-@api_view(['GET','DELETE'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def schedules(request):
     if not perms(request):
         return Response("Not Autherized to access Schedules.",status=401)
     data = Schedule.objects.all()
-    if request.method == 'GET':
-        serializer = ScheduleSerializer(data, many=True)
-        return Response(serializer.data)
-    elif request.method == 'DELETE':
-        count = data.delete()
-        return Response("'message': '{} Schedules were deleted successfully!'.format(count[0])",status = 200)
+    serializer = ScheduleSerializer(data, many=True)
+    return Response(serializer.data)
 
 
 @csrf_exempt
