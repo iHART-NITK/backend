@@ -32,10 +32,10 @@ def medicalHistories(request):
 def medicalHistory(request,pk):
     if request.user.id != pk and not perms(request,pk):
         return Response("Not Autherized to access Medical History.",status=401)
-    data = MedicalHistory.objects.get(id = pk)
+    data = MedicalHistory.objects.filter(id = pk)
     if data:
         if request.method == 'GET':
-            serializer = MedicalHistorySerializer(data, many=False)
+            serializer = MedicalHistorySerializer(data, many=True)
             return Response(serializer.data)
         if not perms(request,pk):
             return Response("Not Autherized to edit Medical History.",status=401)
