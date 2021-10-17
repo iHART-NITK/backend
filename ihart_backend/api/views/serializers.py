@@ -11,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
+            'id',
             'username',
             'first_name',
             'last_name',
@@ -29,6 +30,7 @@ class MedicalHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = MedicalHistory
         fields = (
+            'id',
             'user',
             'category',
             'description'
@@ -39,6 +41,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
         fields = (
+            'id',
             'user',
             'entry_time',
             'exit_time', 
@@ -50,6 +53,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = (
+            'id',
             'schedule',
             'user',
             'start_time',
@@ -62,6 +66,7 @@ class DiagnosisSerializer(serializers.ModelSerializer):
     class Meta:
         model = Diagnosis
         fields = (
+            'id',
             'appointment',
             'diagnosis'
         )
@@ -71,6 +76,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prescription
         fields = (
+            'id',
             'diagnosis', 
             'inventory', 
             'dosage', 

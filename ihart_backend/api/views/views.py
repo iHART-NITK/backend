@@ -5,7 +5,6 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from django.views.decorators.csrf import csrf_exempt
 
-from ..models import Emergency
 from .serializers import UserSerializer
 
 @api_view(['GET'])
@@ -78,22 +77,3 @@ def listApis(request):
     ]
 
     return Response(routes)
-
-@csrf_exempt
-@api_view(['POST'])
-def register(request):
-    serializer = UserSerializer(data=request.data)
-    if serializer.is_valid():
-        # Create new user
-        user = serializer.create(validated_data=request.data)
-        token = Token.objects.create(user=user)
-
-        # Generate the response
-        response = {"Authorization": f"Token {token.key}"}
-        response.update(serializer.data)
-        return Response(response)
-    else:
-        return Response({
-            "error": True,
-            "error_msg": "Invalid details"
-        })

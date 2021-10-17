@@ -1,12 +1,12 @@
 from django.urls import path
 from rest_framework.authtoken import views as restViews
 
-from .views import views, users, medicalHistory, schedule, appointment, diagnosis, prescription, emergency
+from .views import views, users, medicalHistory, schedule, appointment, diagnosis, prescription, emergency, auth
 
 urlpatterns = [
     path('list-apis/', views.listApis, name="list-apis"),
-    path('register/', views.register, name="register"),
-    path('token-auth/', restViews.obtain_auth_token, name="token-auth"),
+    path('register/', auth.register, name="register"),
+    path('token-auth/', auth.CustomAuthToken.as_view(), name="token-auth"),
 
     path('user/', users.users, name="users"),
     path('user/<int:pk>/', users.user, name="user"),
