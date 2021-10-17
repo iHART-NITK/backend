@@ -42,3 +42,11 @@ class CustomAuthToken(ObtainAuthToken):
             'token': token.key,
             'id': user.id,
         })
+
+non_admin_staff = []
+
+def perms(request):
+    user = User.objects.get(id = request.user.id)
+    if user.user_type in non_admin_staff:
+        return False
+    return True
