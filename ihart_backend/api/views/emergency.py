@@ -27,7 +27,6 @@ def location(request, pk):
     data = Emergency.LOCATION_CHOICES[pk]
     return Response(data)
 
-@csrf_exempt
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create(request):
