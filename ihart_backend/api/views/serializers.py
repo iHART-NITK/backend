@@ -26,6 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
 class MedicalHistorySerializer(serializers.ModelSerializer):
+    category = serializers.CharField(source='get_category_display')
 
     class Meta:
         model = MedicalHistory
@@ -35,6 +36,7 @@ class MedicalHistorySerializer(serializers.ModelSerializer):
             'category',
             'description'
         )
+
 
 class ScheduleSerializer(serializers.ModelSerializer):
 
