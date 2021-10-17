@@ -6,14 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from ..models import User
 from .serializers import UserSerializer
-
-non_admin_staff = []
-
-def perms(request):
-    user = User.objects.get(id = request.user.id)
-    if user.user_type in non_admin_staff:
-        return False
-    return True
+from .auth import perms
 
 @csrf_exempt
 @api_view(['GET'])
