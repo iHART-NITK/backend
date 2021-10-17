@@ -95,3 +95,27 @@ class EmergencySerializer(serializers.ModelSerializer):
             'location', 
             'status'
         )
+
+class TransactionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Prescription
+        fields = (
+            'id',
+            'user', 
+            'inventory', 
+            'prescription', 
+            'units'
+        )     
+
+class InventorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Inventory
+        fields = (
+            'id',
+            'name', 
+            'units', 
+            'category', 
+            'cost_per_unit'
+        )                

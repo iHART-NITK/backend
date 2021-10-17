@@ -1,7 +1,8 @@
 from django.urls import path
 from rest_framework.authtoken import views as restViews
 
-from .views import views, users, medicalHistory, schedule, appointment, diagnosis, prescription, emergency, auth
+
+from .views import views, users, medicalHistory, schedule, appointment, diagnosis, prescription, emergency, auth, transaction, inventory
 
 urlpatterns = [
     path('list-apis/', views.listApis, name="list-apis"),
@@ -30,10 +31,17 @@ urlpatterns = [
     
     path('prescription/', prescription.prescriptions, name="prescriptions"),
     path('prescription/<int:pk>/', prescription.prescription, name="prescription"),
+    path('prescription/create',prescription.create, name="prescription-create"),
     
     path('emergency/create/', emergency.create, name="emergency-create"),
     path('emergency/locations/', emergency.locations, name="locations"),
     path('emergency/location/<int:pk>/', emergency.location, name="location"),
 
-    path('prescription/create',prescription.create, name="prescription-create"),
+    path('transaction/', transaction.transactions, name="transactions"),
+    path('transaction/<int:pk>/', transaction.transaction, name="transaction"),
+    path('transaction/create/',transaction.create, name="transaction-create"),
+
+    path('inventory/', inventory.inventories, name="inventories"),
+    path('inventory/<int:pk>/', inventory.inventory, name="inventory"),
+    path('inventory/create/',inventory.create, name="inventory-create"),
 ]
