@@ -3,13 +3,11 @@ from rest_framework.response import Response
 
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
-from django.views.decorators.csrf import csrf_exempt
 
 from ..models import Prescription,User
 from .serializers import PrescriptionSerializer
 from .auth import perms
 
-@csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def prescriptions(request):
@@ -19,18 +17,17 @@ def prescriptions(request):
     serializer = PrescriptionSerializer(data, many=True)
     return Response(serializer.data)
 
-@csrf_exempt
 @api_view(['GET','POST','DELETE'])
 @permission_classes([IsAuthenticated])
 def prescription(request,pk):
-    if request.user.id != pk and not perms(request,pk):
+    if request.user.id != pk and not perms(request):
         return Response("Not Autherized to access prescription.",status=401)
     data = Prescription.objects.get(id = pk)
     if data:
         if request.method == 'GET':
             serializer = PrescriptionSerializer(data, many=False)
             return Response(serializer.data)
-        if not perms(request,pk):
+        if not perms(request):
             return Response("Not Autherized to edit Prescription.",status=401)
         if request.method == 'POST':
             serializer = PrescriptionSerializer(instance = data, data = request.data)
@@ -43,7 +40,6 @@ def prescription(request,pk):
     else:
         return Response("Prescription not found!",status = 404)
 
-@csrf_exempt
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create(request):

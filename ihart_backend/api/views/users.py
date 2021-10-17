@@ -2,13 +2,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
-from django.views.decorators.csrf import csrf_exempt
 
 from ..models import User
 from .serializers import UserSerializer
 from .auth import perms
 
-@csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def users(request):
@@ -18,8 +16,6 @@ def users(request):
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
 
-
-@csrf_exempt
 @api_view(['GET','POST','DELETE'])
 @permission_classes([IsAuthenticated])
 def user(request,pk):
