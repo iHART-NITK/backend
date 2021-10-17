@@ -6,6 +6,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 
 from .serializers import UserSerializer
+from ..models import User
 
 @api_view(['POST'])
 def register(request):
