@@ -2,13 +2,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from django.views.decorators.csrf import csrf_exempt
 
 from ..models import Appointment, User
 from .serializers import AppointmentSerializer, MedicalHistorySerializer
 from .auth import perms
 
-@csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def appointments(request):
@@ -18,8 +16,6 @@ def appointments(request):
     serializer = MedicalHistorySerializer(data, many=True)
     return Response(serializer.data)
 
-
-@csrf_exempt
 @api_view(['GET','POST','DELETE'])
 @permission_classes([IsAuthenticated])
 def appointment(request,pk):
@@ -46,7 +42,6 @@ def appointment(request,pk):
     else:
         return Response("Appointment not found!",status = 404)
 
-@csrf_exempt
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create(request):

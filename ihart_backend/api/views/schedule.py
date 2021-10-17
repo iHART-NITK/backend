@@ -2,13 +2,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
-from django.views.decorators.csrf import csrf_exempt
 
 from ..models import Schedule, User
 from .serializers import ScheduleSerializer
 from .auth import perms
 
-@csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def schedules(request):
@@ -19,7 +17,6 @@ def schedules(request):
     return Response(serializer.data)
 
 
-@csrf_exempt
 @api_view(['GET','POST','DELETE'])
 @permission_classes([IsAuthenticated])
 def schedule(request,pk):
@@ -41,7 +38,6 @@ def schedule(request,pk):
     else:
         return Response("Schedule not found!",status = 404)
 
-@csrf_exempt
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create(request):

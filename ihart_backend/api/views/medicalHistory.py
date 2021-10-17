@@ -2,13 +2,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
-from django.views.decorators.csrf import csrf_exempt
 
 from ..models import MedicalHistory, User
 from .serializers import MedicalHistorySerializer
 from .auth import perms
 
-@csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def medicalHistories(request):
@@ -19,7 +17,6 @@ def medicalHistories(request):
     return Response(serializer.data)
 
 
-@csrf_exempt
 @api_view(['GET','POST','DELETE'])
 @permission_classes([IsAuthenticated])
 def medicalHistory(request,pk):
@@ -43,7 +40,6 @@ def medicalHistory(request,pk):
     else:
         return Response("Medical History not found!",status = 404)
 
-@csrf_exempt
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create(request):
@@ -52,7 +48,6 @@ def create(request):
         serializer.save()
     return Response(serializer.data)
 
-@csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def medicalHistoriesByUser(request,pk):
