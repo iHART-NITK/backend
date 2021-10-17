@@ -25,7 +25,7 @@ def locations(request):
     location_hash = {}
     for abbr, loc in data:
         location_hash.setdefault(abbr, loc)
-    return Response(str(location_hash))
+    return Response(location_hash)
 
 @csrf_exempt
 @api_view(['GET'])
