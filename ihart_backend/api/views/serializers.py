@@ -76,3 +76,14 @@ class PrescriptionSerializer(serializers.ModelSerializer):
             'dosage', 
             'medicine_units'
         )
+
+class EmergencySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Emergency
+        fields = (
+            'user', 
+            'reason', 
+            'location', 
+            'status'
+        )

@@ -31,7 +31,9 @@ urlpatterns = [
     path('prescription/', prescription.prescriptions, name="prescriptions"),
     path('prescription/<int:pk>/', prescription.prescription, name="prescription"),
     
+    path('emergency/create/', emergency.create, name="emergency-create"),
     path('emergency/locations/', emergency.locations, name="locations"),
     path('emergency/location/<int:pk>/', emergency.location, name="location"),
+
     path('prescription/create',prescription.create, name="prescription-create"),
 ]

@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.views.decorators.csrf import csrf_exempt
 
 from ..models import Emergency, User
+from .serializers import EmergencySerializer
 
 non_admin_staff = []
 
@@ -35,3 +36,16 @@ def location(request, pk):
         return Response("Not Autherized to access Locations.",status=401)
     data = Emergency.LOCATION_CHOICES[pk]
     return Response(data)
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create(request):
+    request_data = request.data.copy()
+    request_data["user"] = 2
+    
+    serializer = EmergencySerializer(data = request_data)
+    print(request_data)
+    if serializer.is_valid(): serializer.save()
+    else: print(serializer.errors)
+    return Response(serializer.data)
