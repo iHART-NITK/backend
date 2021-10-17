@@ -19,7 +19,7 @@ def appointments(request):
 @api_view(['GET','POST','DELETE'])
 @permission_classes([IsAuthenticated])
 def appointment(request,pk):
-    if request.user.id != pk and not perms(request,pk):
+    if request.user.id != pk and not perms(request):
         return Response("Not Autherized to access Appointment.",status=401)
     data = Appointment.objects.get(id = pk)
     if data:
@@ -27,7 +27,7 @@ def appointment(request,pk):
         if request.method == 'GET':
             serializer = AppointmentSerializer(data, many=False)
             return Response(serializer.data)
-        if not perms(request,pk):
+        if not perms(request):
             return Response("Not Autherized to edit Appointments.",status=401)
         # altering appointment info
         if request.method == 'POST':

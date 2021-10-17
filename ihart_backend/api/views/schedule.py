@@ -20,7 +20,7 @@ def schedules(request):
 @api_view(['GET','POST','DELETE'])
 @permission_classes([IsAuthenticated])
 def schedule(request,pk):
-    if request.user.id != pk and not perms(request,pk):
+    if request.user.id != pk and not perms(request):
         return Response("Not Autherized to access schedule.",status=401)
     data = Schedule.objects.get(id = pk)
     if data:

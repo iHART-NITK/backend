@@ -20,14 +20,14 @@ def prescriptions(request):
 @api_view(['GET','POST','DELETE'])
 @permission_classes([IsAuthenticated])
 def prescription(request,pk):
-    if request.user.id != pk and not perms(request,pk):
+    if request.user.id != pk and not perms(request):
         return Response("Not Autherized to access prescription.",status=401)
     data = Prescription.objects.get(id = pk)
     if data:
         if request.method == 'GET':
             serializer = PrescriptionSerializer(data, many=False)
             return Response(serializer.data)
-        if not perms(request,pk):
+        if not perms(request):
             return Response("Not Autherized to edit Prescription.",status=401)
         if request.method == 'POST':
             serializer = PrescriptionSerializer(instance = data, data = request.data)

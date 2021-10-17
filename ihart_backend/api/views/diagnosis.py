@@ -20,14 +20,14 @@ def diagnoses(request):
 @api_view(['GET','POST','DELETE'])
 @permission_classes([IsAuthenticated])
 def diagnosis(request,pk):
-    if request.user.id != pk and not perms(request,pk):
+    if request.user.id != pk and not perms(request):
         return Response("Not Autherized to access Diagnosis.",status=401)
     data = Diagnosis.objects.get(id = pk)
     if data:
         if request.method == 'GET':
             serializer = DiagnosisSerializer(data, many=False)
             return Response(serializer.data)
-        if not perms(request,pk):
+        if not perms(request):
             return Response("Not Autherized to edit Diagnosis.",status=401)
         if request.method == 'POST':
             serializer = DiagnosisSerializer(instance = data, data = request.data)

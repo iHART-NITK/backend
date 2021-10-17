@@ -20,14 +20,14 @@ def medicalHistories(request):
 @api_view(['GET','POST','DELETE'])
 @permission_classes([IsAuthenticated])
 def medicalHistory(request,pk):
-    if request.user.id != pk and not perms(request,pk):
+    if request.user.id != pk and not perms(request):
         return Response("Not Autherized to access Medical History.",status=401)
     data = MedicalHistory.objects.filter(id = pk)
     if data:
         if request.method == 'GET':
             serializer = MedicalHistorySerializer(data, many=True)
             return Response(serializer.data)
-        if not perms(request,pk):
+        if not perms(request):
             return Response("Not Autherized to edit Medical History.",status=401)
         if request.method == 'POST':
             serializer = MedicalHistorySerializer(instance = data, data = request.data)
@@ -51,7 +51,7 @@ def create(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def medicalHistoriesByUser(request,pk):
-    if request.user.id != pk and not perms(request,pk):
+    if request.user.id != pk and not perms(request):
         return Response("Not Autherized to access Medical Histories.",status=401)
     user = User.objects.get(id = pk)
     if user :
