@@ -7,11 +7,12 @@ from ..models import Emergency, User
 from .serializers import EmergencySerializer
 from .auth import perms
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def locations(request):
     if not perms(request):
-        return Response("Not Autherized to access Locations.",status=401)
+        return Response("Not Autherized to access Locations.", status=401)
     data = Emergency.LOCATION_CHOICES
     # return Response(converters.(data, {}))
     location_hash = {}
@@ -19,18 +20,20 @@ def locations(request):
         location_hash.setdefault(abbr, loc)
     return Response(location_hash)
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def location(request, pk):
     if not perms(request):
-        return Response("Not Autherized to access Locations.",status=401)
+        return Response("Not Autherized to access Locations.", status=401)
     data = Emergency.LOCATION_CHOICES[pk]
     return Response(data)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create(request):
-    serializer = EmergencySerializer(data = request.data)
+    serializer = EmergencySerializer(data=request.data)
     if serializer.is_valid():
-         serializer.save()
+        serializer.save()
     return Response(serializer.data)

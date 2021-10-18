@@ -3,6 +3,7 @@ from rest_framework.validators import UniqueTogetherValidator
 
 from ..models import User, Inventory, Emergency, MedicalHistory, Schedule, Appointment, Diagnosis, Prescription
 
+
 class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
@@ -25,6 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
             )
         ]
 
+
 class MedicalHistorySerializer(serializers.ModelSerializer):
     category = serializers.CharField(source='get_category_display')
 
@@ -46,9 +48,10 @@ class ScheduleSerializer(serializers.ModelSerializer):
             'id',
             'user',
             'entry_time',
-            'exit_time', 
+            'exit_time',
             'day'
         )
+
 
 class AppointmentSerializer(serializers.ModelSerializer):
 
@@ -63,6 +66,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
             'create_time'
         )
 
+
 class DiagnosisSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -73,28 +77,31 @@ class DiagnosisSerializer(serializers.ModelSerializer):
             'diagnosis'
         )
 
+
 class PrescriptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Prescription
         fields = (
             'id',
-            'diagnosis', 
-            'inventory', 
-            'dosage', 
+            'diagnosis',
+            'inventory',
+            'dosage',
             'medicine_units'
         )
+
 
 class EmergencySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Emergency
         fields = (
-            'user', 
-            'reason', 
-            'location', 
+            'user',
+            'reason',
+            'location',
             'status'
         )
+
 
 class TransactionSerializer(serializers.ModelSerializer):
 
@@ -102,11 +109,12 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Prescription
         fields = (
             'id',
-            'user', 
-            'inventory', 
-            'prescription', 
+            'user',
+            'inventory',
+            'prescription',
             'units'
-        )     
+        )
+
 
 class InventorySerializer(serializers.ModelSerializer):
 
@@ -114,8 +122,8 @@ class InventorySerializer(serializers.ModelSerializer):
         model = Inventory
         fields = (
             'id',
-            'name', 
-            'units', 
-            'category', 
+            'name',
+            'units',
+            'category',
             'cost_per_unit'
-        )                
+        )
