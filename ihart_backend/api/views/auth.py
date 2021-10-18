@@ -14,7 +14,7 @@ def register(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         # Create new user
-        user = serializer.create(validated_data=request.data)
+        user = serializer.create(validated_data=serializer.data)
         token = Token.objects.create(user=user)
 
         # Generate the response
@@ -28,7 +28,7 @@ def register(request):
         return Response({
             "error": True,
             "error_msg": "Invalid details"
-        })
+        }, status=403)
 
 
 class CustomAuthToken(ObtainAuthToken):

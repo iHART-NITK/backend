@@ -42,7 +42,10 @@ class User(AbstractUser):
         choices=USER_TYPE_CHOICES,
         default='Stu',
         verbose_name="User Type")
-    middle_name = models.CharField(max_length=30, verbose_name="Middle Name")
+    middle_name = models.CharField(
+        max_length=30,
+        verbose_name="Middle Name",
+        null=True)
     gender = models.CharField(
         max_length=1,
         choices=GENDER_CHOICES,
