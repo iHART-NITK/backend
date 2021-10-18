@@ -1,9 +1,9 @@
-name: Pylint
+name: code_quality
 
 on: [push]
 
 jobs:
-  build:
+  code_quality:
 
     runs-on: ubuntu-latest
 
@@ -21,4 +21,8 @@ jobs:
       continue-on-error: true
       run: |
         pylint `find . -type d -name migrations -prune -o -name '*.py'| grep -v __ |xargs`
+    - name: Python Blacken
+      uses: piotrpawlaczek/python-blacken@v20.8b1
+      with:
+        only-check: 'no'
         
