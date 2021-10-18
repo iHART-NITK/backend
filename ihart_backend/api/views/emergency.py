@@ -30,11 +30,7 @@ def location(request, pk):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create(request):
-    request_data = request.data.copy()
-    request_data["user"] = 2
-    
-    serializer = EmergencySerializer(data = request_data)
-    print(request_data)
-    if serializer.is_valid(): serializer.save()
-    else: print(serializer.errors)
+    serializer = EmergencySerializer(data = request.data)
+    if serializer.is_valid():
+         serializer.save()
     return Response(serializer.data)
