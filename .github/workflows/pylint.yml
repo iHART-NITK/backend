@@ -22,7 +22,7 @@ jobs:
       run: |
         pylint `find . -type d -name migrations -prune -o -name '*.py'| grep -v __ |xargs`
     - name: Python Blacken
-      uses: piotrpawlaczek/python-blacken@v20.8b1
+      uses: piotrpawlaczek/python-blacken@release/stable
       with:
         only-check: 'no'
         
