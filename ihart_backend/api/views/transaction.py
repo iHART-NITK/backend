@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
-from ..models import Transaction
+from ..models import Transaction, User , Appointment, Prescription, Diagnosis
 from .serializers import TransactionSerializer
 from .auth import perms
 

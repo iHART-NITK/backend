@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
-from ..models import Diagnosis, User
+from ..models import Diagnosis, User, Appointment
 from .serializers import DiagnosisSerializer
 from .auth import perms
 
@@ -49,3 +49,18 @@ def create(request):
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def diagnosesByUser(request, pk):
+    if request.user.id != pk and not perms(request):
+        return Response(
+            "Not Autherized to access Diagnoses.",
+            status=401)
+    user = User.objects.get(id=pk)
+    if user:
+        data = Diagnosis.objects.filter(appointment__in = Appointment.objects.filter(user = user))
+        serializer = DiagnosisSerializer(data, many=True)
+        return Response(serializer.data)
+    else:
+        return Response("User not found", status=404)

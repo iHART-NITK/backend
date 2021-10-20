@@ -53,3 +53,18 @@ def create(request):
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def appointmentsByUser(request, pk):
+    if request.user.id != pk and not perms(request):
+        return Response(
+            "Not Autherized to access Appointments.",
+            status=401)
+    user = User.objects.get(id=pk)
+    if user:
+        data = Appointment.objects.filter(user=user)
+        serializer = AppointmentSerializer(data, many=True)
+        return Response(serializer.data)
+    else:
+        return Response("User not found", status=404)

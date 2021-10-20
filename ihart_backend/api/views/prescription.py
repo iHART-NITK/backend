@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
-from ..models import Prescription, User
+from ..models import Prescription, User, Diagnosis, Appointment
 from .serializers import PrescriptionSerializer
 from .auth import perms
 
@@ -51,3 +51,18 @@ def create(request):
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def prescriptionsByUser(request, pk):
+    if request.user.id != pk and not perms(request):
+        return Response(
+            "Not Autherized to access Prescriptions.",
+            status=401)
+    user = User.objects.get(id=pk)
+    if user:
+        data = Prescription.objects.filter(diagnosis__in = Diagnosis.objects.filter(appointment__in = Appointment.objects.filter(user = user)))
+        serializer = PrescriptionSerializer(data, many=True)
+        return Response(serializer.data)
+    else:
+        return Response("User not found", status=404)
