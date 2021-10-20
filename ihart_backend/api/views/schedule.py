@@ -23,8 +23,8 @@ def schedules(request):
 def schedule(request, pk):
     if request.user.id != pk and not perms(request):
         return Response("Not Autherized to access schedule.", status=401)
-    data = Schedule.objects.get(id=pk)
-    if data:
+    try :
+        data = Schedule.objects.get(id=pk)
         if request.method == 'GET':
             serializer = ScheduleSerializer(data, many=False)
             return Response(serializer.data)
@@ -36,7 +36,7 @@ def schedule(request, pk):
         elif request.method == 'DELETE':
             data.delete()
             return Response("Schedule deleted successfully!", status=200)
-    else:
+    except:
         return Response("Schedule not found!", status=404)
 
 
@@ -55,10 +55,10 @@ def schedulesByUser(request, pk):
         return Response(
             "Not Autherized to access Schedules.",
             status=401)
-    user = User.objects.get(id=pk)
-    if user:
+    try:
+        user = User.objects.get(id=pk)
         data = Schedule.objects.filter(user = user)
         serializer = ScheduleSerializer(data, many=True)
         return Response(serializer.data)
-    else:
+    except:
         return Response("User not found", status=404)

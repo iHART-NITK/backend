@@ -24,8 +24,8 @@ def inventories(request):
 def inventory(request, pk):
     if request.user.id != pk and not perms(request):
         return Response("Not Autherized to access inventory.", status=401)
-    data = Inventory.objects.get(id=pk)
-    if data:
+    try:
+        data = Inventory.objects.get(id=pk)
         if request.method == 'GET':
             serializer = InventorySerializer(data, many=False)
             return Response(serializer.data)
@@ -39,7 +39,7 @@ def inventory(request, pk):
         elif request.method == 'DELETE':
             data.delete()
             return Response("Inventory deleted successfully!", status=200)
-    else:
+    except:
         return Response("Inventory not found!", status=404)
 
 

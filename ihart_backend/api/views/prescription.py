@@ -24,8 +24,8 @@ def prescriptions(request):
 def prescription(request, pk):
     if request.user.id != pk and not perms(request):
         return Response("Not Autherized to access prescription.", status=401)
-    data = Prescription.objects.get(id=pk)
-    if data:
+    try:
+        data = Prescription.objects.get(id=pk)
         if request.method == 'GET':
             serializer = PrescriptionSerializer(data, many=False)
             return Response(serializer.data)
@@ -40,7 +40,7 @@ def prescription(request, pk):
         elif request.method == 'DELETE':
             data.delete()
             return Response("Prescription deleted successfully!", status=200)
-    else:
+    except:
         return Response("Prescription not found!", status=404)
 
 
@@ -59,10 +59,12 @@ def prescriptionsByUser(request, pk):
         return Response(
             "Not Autherized to access Prescriptions.",
             status=401)
-    user = User.objects.get(id=pk)
-    if user:
-        data = Prescription.objects.filter(diagnosis__in = Diagnosis.objects.filter(appointment__in = Appointment.objects.filter(user = user)))
+    try:
+        user = User.objects.get(id=pk)
+        appointments = Appointment.objects.filter(user = user)
+        diagnoses = Diagnosis.objects.filter(appointment__in = appointments)
+        data = Prescription.objects.filter(diagnosis__in = diagnoses)
         serializer = PrescriptionSerializer(data, many=True)
         return Response(serializer.data)
-    else:
+    except:
         return Response("User not found", status=404)

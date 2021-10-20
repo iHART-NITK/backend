@@ -44,6 +44,7 @@ urlpatterns = [
     path('transaction/', transaction.transactions, name="transactions"),
     path('transaction/<int:pk>/', transaction.transaction, name="transaction"),
     path('transaction/create/', transaction.create, name="transaction-create"),
+    path('user/<int:pk>/transaction/', transaction.transactionsByUser, name = "transactions-by-user"),
 
     path('inventory/', inventory.inventories, name="inventories"),
     path('inventory/<int:pk>/', inventory.inventory, name="inventory"),

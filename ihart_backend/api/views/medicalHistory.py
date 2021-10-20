@@ -27,8 +27,8 @@ def medicalHistory(request, pk):
         return Response(
             "Not Autherized to access Medical History.",
             status=401)
-    data = MedicalHistory.objects.filter(id=pk)
-    if data:
+    try:
+        data = MedicalHistory.objects.filter(id=pk)
         if request.method == 'GET':
             serializer = MedicalHistorySerializer(data, many=True)
             return Response(serializer.data)
@@ -47,7 +47,7 @@ def medicalHistory(request, pk):
             return Response(
                 "Medical history deleted successfully!",
                 status=200)
-    else:
+    except:
         return Response("Medical History not found!", status=404)
 
 
@@ -67,10 +67,10 @@ def medicalHistoriesByUser(request, pk):
         return Response(
             "Not Autherized to access Medical Histories.",
             status=401)
-    user = User.objects.get(id=pk)
-    if user:
+    try:
+        user = User.objects.get(id=pk)
         data = MedicalHistory.objects.filter(user=user)
         serializer = MedicalHistorySerializer(data, many=True)
         return Response(serializer.data)
-    else:
+    except:
         return Response("User not found", status=404)

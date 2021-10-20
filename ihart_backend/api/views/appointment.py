@@ -23,8 +23,8 @@ def appointments(request):
 def appointment(request, pk):
     if request.user.id != pk and not perms(request):
         return Response("Not Autherized to access Appointment.", status=401)
-    data = Appointment.objects.get(id=pk)
-    if data:
+    try:
+        data = Appointment.objects.get(id=pk)
         # accessing appointment info
         if request.method == 'GET':
             serializer = AppointmentSerializer(data, many=False)
@@ -42,7 +42,7 @@ def appointment(request, pk):
         elif request.method == 'DELETE':
             data.delete()
             return Response("Appointment deleted successfully!", status=200)
-    else:
+    except:
         return Response("Appointment not found!", status=404)
 
 
@@ -61,10 +61,10 @@ def appointmentsByUser(request, pk):
         return Response(
             "Not Autherized to access Appointments.",
             status=401)
-    user = User.objects.get(id=pk)
-    if user:
+    try:
+        user = User.objects.get(id=pk)
         data = Appointment.objects.filter(user=user)
         serializer = AppointmentSerializer(data, many=True)
         return Response(serializer.data)
-    else:
+    except:
         return Response("User not found", status=404)

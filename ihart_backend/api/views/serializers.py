@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from ..models import User, Inventory, Emergency, MedicalHistory, Schedule, Appointment, Diagnosis, Prescription
+from ..models import User, Inventory, Emergency, MedicalHistory, Schedule, Appointment, Diagnosis, Prescription, Transaction
 
 
 class UserSerializer(serializers.ModelSerializer):
+    user_type = serializers.CharField(source='get_user_type_display')
+    gender = serializers.CharField(source='get_gender_display')
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
@@ -20,6 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
             'password',
             'phone',
             'user_type',
+            'gender'
         )
         validators = [
             UniqueTogetherValidator(
@@ -43,7 +46,7 @@ class MedicalHistorySerializer(serializers.ModelSerializer):
 
 
 class ScheduleSerializer(serializers.ModelSerializer):
-
+    day = serializers.CharField(source='get_day_display')
     class Meta:
         model = Schedule
         fields = (
@@ -56,7 +59,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
-
+    status = serializers.CharField(source='get_status_display')
     class Meta:
         model = Appointment
         fields = (
@@ -94,7 +97,8 @@ class PrescriptionSerializer(serializers.ModelSerializer):
 
 
 class EmergencySerializer(serializers.ModelSerializer):
-
+    location = serializers.CharField(source='get_location_display')
+    status = serializers.CharField(source='get_status_display')
     class Meta:
         model = Emergency
         fields = (
@@ -108,18 +112,16 @@ class EmergencySerializer(serializers.ModelSerializer):
 class TransactionSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Prescription
+        model = Transaction
         fields = (
             'id',
-            'user',
-            'inventory',
             'prescription',
             'units'
         )
 
 
 class InventorySerializer(serializers.ModelSerializer):
-
+    category = serializers.CharField(source='get_category_display')
     class Meta:
         model = Inventory
         fields = (

@@ -23,8 +23,8 @@ def diagnoses(request):
 def diagnosis(request, pk):
     if request.user.id != pk and not perms(request):
         return Response("Not Autherized to access Diagnosis.", status=401)
-    data = Diagnosis.objects.get(id=pk)
-    if data:
+    try:
+        data = Diagnosis.objects.get(id=pk)
         if request.method == 'GET':
             serializer = DiagnosisSerializer(data, many=False)
             return Response(serializer.data)
@@ -38,7 +38,7 @@ def diagnosis(request, pk):
         elif request.method == 'DELETE':
             data.delete()
             return Response("DIagnosis deleted successfully!", status=200)
-    else:
+    except:
         return Response("Diagnosis not found!", status=404)
 
 
@@ -57,10 +57,11 @@ def diagnosesByUser(request, pk):
         return Response(
             "Not Autherized to access Diagnoses.",
             status=401)
-    user = User.objects.get(id=pk)
-    if user:
-        data = Diagnosis.objects.filter(appointment__in = Appointment.objects.filter(user = user))
+    try:
+        user = User.objects.get(id=pk)
+        appointments = Appointment.objects.filter(user = user)
+        data = Diagnosis.objects.filter(appointment__in = appointments)
         serializer = DiagnosisSerializer(data, many=True)
         return Response(serializer.data)
-    else:
+    except:
         return Response("User not found", status=404)
