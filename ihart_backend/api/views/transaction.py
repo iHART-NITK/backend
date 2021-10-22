@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
-from ..models import Transaction
+from ..models import Transaction, User , Appointment, Prescription, Diagnosis
 from .serializers import TransactionSerializer
 from .auth import perms
 
@@ -24,8 +24,8 @@ def transactions(request):
 def transaction(request, pk):
     if request.user.id != pk and not perms(request):
         return Response("Not Autherized to access transaction.", status=401)
-    data = Transaction.objects.get(id=pk)
-    if data:
+    try:
+        data = Transaction.objects.get(id=pk)
         if request.method == 'GET':
             serializer = TransactionSerializer(data, many=False)
             return Response(serializer.data)
@@ -40,7 +40,7 @@ def transaction(request, pk):
         elif request.method == 'DELETE':
             data.delete()
             return Response("Transaction deleted successfully!", status=200)
-    else:
+    except:
         return Response("Transaction not found!", status=404)
 
 
@@ -51,3 +51,20 @@ def create(request):
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def transactionsByUser(request, pk):
+    if request.user.id != pk and not perms(request):
+        return Response(
+            "Not Autherized to access Transactions.",status=401)
+    try:
+        user = User.objects.get(id=pk)
+        appointments = Appointment.objects.filter(user = user)
+        diagnoses = Diagnosis.objects.filter(appointment__in = appointments)
+        prescription = Prescription.objects.filter(diagnosis__in = diagnoses)
+        data = Transaction.objects.filter(prescription__in = prescription)
+        serializer = TransactionSerializer(data, many=True)
+        return Response(serializer.data)
+    except:
+        return Response("User not found", status=404)

@@ -20,18 +20,22 @@ urlpatterns = [
     path('schedule/', schedule.schedules, name="schedules"),
     path('schedule/<int:pk>/', schedule.schedule, name="schedule"),
     path('schedule/create/', schedule.create, name="schedule-create"),
+    path('user/<int:pk>/schedule/', schedule.schedulesByUser, name = "scehdules-by-user"),
 
     path('appointment/', appointment.appointments, name="appointments"),
     path('appointment/<int:pk>/', appointment.appointment, name="appointment"),
     path('appointment/create', appointment.create, name="appointment-create"),
+    path('user/<int:pk>/appointment/',appointment.appointmentsByUser, name = "appointments-by-user"),
 
     path('diagnosis/', diagnosis.diagnoses, name="diagnoses"),
     path('diagnosis/<int:pk>/', diagnosis.diagnosis, name="diagnosis"),
     path('diagnosis/create', diagnosis.create, name="diagnosis-create"),
+    path('user/<int:pk>/diagnosis',diagnosis.diagnosesByUser,name="diagnoses-by-user"),
 
     path('prescription/', prescription.prescriptions, name="prescriptions"),
     path('prescription/<int:pk>/', prescription.prescription, name="prescription"),
     path('prescription/create', prescription.create, name="prescription-create"),
+    path('user/<int:pk>/prescription', prescription.prescriptionsByUser,name = "prescriptions-by-user"),
 
     path('emergency/create/', emergency.create, name="emergency-create"),
     path('emergency/locations/', emergency.locations, name="locations"),
@@ -40,6 +44,7 @@ urlpatterns = [
     path('transaction/', transaction.transactions, name="transactions"),
     path('transaction/<int:pk>/', transaction.transaction, name="transaction"),
     path('transaction/create/', transaction.create, name="transaction-create"),
+    path('user/<int:pk>/transaction/', transaction.transactionsByUser, name = "transactions-by-user"),
 
     path('inventory/', inventory.inventories, name="inventories"),
     path('inventory/<int:pk>/', inventory.inventory, name="inventory"),

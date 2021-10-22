@@ -23,15 +23,18 @@ def users(request):
 def user(request, pk):
     if request.user.id != pk and not perms(request):
         return Response("Not Autherized to access profile.", status=401)
-    user = User.objects.get(id=pk)
-    if request.method == 'GET':
-        serializer = UserSerializer(user, many=False)
-        return Response(serializer.data)
-    elif request.method == 'POST':
-        serializer = UserSerializer(instance=user, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-        return Response(serializer.data)
-    elif request.method == 'DELETE':
-        user.delete()
-        return Response("User deleted successfully!", status=200)
+    try:
+        user = User.objects.get(id=pk)
+        if request.method == 'GET':
+            serializer = UserSerializer(user, many=False)
+            return Response(serializer.data)
+        elif request.method == 'POST':
+            serializer = UserSerializer(instance=user, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+            return Response(serializer.data)
+        elif request.method == 'DELETE':
+            user.delete()
+            return Response("User deleted successfully!", status=200)
+    except:
+        return Response("User not found", status=404)

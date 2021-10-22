@@ -164,14 +164,6 @@ class Prescription(models.Model):
 
 
 class Transaction(models.Model):
-    user = models.ForeignKey(
-        'User',
-        on_delete=models.CASCADE,
-        verbose_name="User ID")
-    inventory = models.ForeignKey(
-        'Inventory',
-        on_delete=models.CASCADE,
-        verbose_name="Inventory ID")
     prescription = models.ForeignKey(
         'Prescription',
         on_delete=models.CASCADE,
