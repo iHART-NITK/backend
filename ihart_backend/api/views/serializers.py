@@ -5,28 +5,37 @@ from ..models import User, Inventory, Emergency, MedicalHistory, Schedule, Appoi
 
 
 class UserSerializer(serializers.ModelSerializer):
+    full_name = serializers.CharField(source="get_full_name", read_only=True)
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
 
     class Meta:
         model = User
-        fields = (
+        fields = [
             'id',
             'username',
             'first_name',
             'last_name',
             'email',
-            'password',
             'phone',
             'user_type',
-        )
+            'full_name'
+        ]
+        read_only_fields = ['full_name']
         validators = [
             UniqueTogetherValidator(
                 queryset=User.objects.all(),
                 fields=['username', 'email']
             )
         ]
+    def get_full_name(self, obj):
+        user = User.objects.get(username=obj["username"])
+        
+        if user.middle_name != "":
+            return f"{user.first_name} {user.middle_name} {user.last_name}"
+        else:
+            return f"{user.first_name} {user.last_name}"
 
 
 class MedicalHistorySerializer(serializers.ModelSerializer):
