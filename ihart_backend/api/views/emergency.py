@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.authtoken.models import Token
 
 from ..models import Emergency, User
 from .serializers import EmergencySerializer
@@ -33,7 +34,25 @@ def location(request, pk):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create(request):
-    serializer = EmergencySerializer(data=request.data)
+    token = request.headers.get('Authorization').split()[1]
+    data = request.data.copy()
+    data["user"] = Token.objects.get(key=token).user.id
+    serializer = EmergencySerializer(data=data)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def emergenciesByUser(request, pk):
+    if request.user.id != pk and not perms(request):
+            return Response(
+            "Not Autherized to access Emergencies.",
+            status=401)
+    try:
+        user = User.objects.get(id=pk)
+        data = Emergency.objects.filter(user=user)
+        serializer = EmergencySerializer(data, many=True)
+        return Response(serializer.data)
+    except:
+        return Response("User not found", status=404)

@@ -40,6 +40,7 @@ urlpatterns = [
     path('emergency/create/', emergency.create, name="emergency-create"),
     path('emergency/locations/', emergency.locations, name="locations"),
     path('emergency/location/<int:pk>/', emergency.location, name="location"),
+    path('user/<int:pk>/emergency/', emergency.emergenciesByUser, name="emergencies-by-user"),
 
     path('transaction/', transaction.transactions, name="transactions"),
     path('transaction/<int:pk>/', transaction.transaction, name="transaction"),

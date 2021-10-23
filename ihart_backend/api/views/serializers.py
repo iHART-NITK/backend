@@ -106,6 +106,10 @@ class PrescriptionSerializer(serializers.ModelSerializer):
 
 
 class EmergencySerializer(serializers.ModelSerializer):
+    def create(self, obj):
+        newObj = Emergency.objects.create(user=obj['user'], reason=obj['reason'], location=obj['get_location_display'], status=obj['get_status_display'])
+        return newObj
+
     location = serializers.CharField(source='get_location_display')
     status = serializers.CharField(source='get_status_display')
     class Meta:
