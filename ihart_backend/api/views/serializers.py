@@ -75,6 +75,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
             'id',
             'schedule',
             'user',
+            'date',
             'start_time',
             'status',
             'create_time'

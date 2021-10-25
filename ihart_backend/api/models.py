@@ -125,6 +125,7 @@ class Appointment(models.Model):
         'User',
         on_delete=models.CASCADE,
         verbose_name="User ID")
+    date = models.DateField(verbose_name="Appointment Date")
     start_time = models.TimeField(verbose_name="Start Time")
     status = models.CharField(
         max_length=2,
