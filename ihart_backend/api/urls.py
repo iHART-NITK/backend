@@ -8,6 +8,7 @@ urlpatterns = [
     path('list-apis/', views.listApis, name="list-apis"),
     path('register/', auth.register, name="register"),
     path('token-auth/', auth.CustomAuthToken.as_view(), name="token-auth"),
+    path('verify-user/', auth.verifyIfRegistered, name="verify-if-registered"),
 
     path('user/', users.users, name="users"),
     path('user/<int:pk>/', users.user, name="user"),
