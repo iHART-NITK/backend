@@ -59,11 +59,11 @@ def create(request):
 def appointmentsByUser(request, pk):
     if request.user.id != pk and not perms(request):
         return Response(
-            "Not Autherized to access Appointments.",
+            "Not Authorized to access Appointments.",
             status=401)
     try:
         user = User.objects.get(id=pk)
-        data = Appointment.objects.filter(user=user)
+        data = Appointment.objects.filter(user=user).order_by('-date', '-start_time')
         serializer = AppointmentSerializer(data, many=True)
         return Response(serializer.data)
     except:
