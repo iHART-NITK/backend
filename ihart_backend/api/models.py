@@ -55,6 +55,7 @@ class User(AbstractUser):
         max_length=20, verbose_name="Emergency Contact Number")
     forgot_pwd_token = models.CharField(
         max_length=50, verbose_name="Forgot Password Token")
+    customer_id = models.CharField(max_length=30, verbose_name="Google Customer ID")
 
 # Medical History Model, stores data on each user's medical history
 
