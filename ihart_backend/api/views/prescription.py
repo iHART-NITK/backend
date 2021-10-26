@@ -68,3 +68,19 @@ def prescriptionsByUser(request, pk):
         return Response(serializer.data)
     except:
         return Response("User not found", status=404)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def prescriptionsByUserAppointment(request, pk, a_pk):
+    if request.user.id != pk and not perms(request):
+        return Response(
+            "Not Authorized to access Prescriptions.",
+            status=401)
+    try:
+        appointment = Appointment.objects.get(id=a_pk)
+        diagnoses = Diagnosis.objects.filter(appointment = appointment)
+        data = Prescription.objects.filter(diagnosis__in = diagnoses).order_by('diagnosis')
+        serializer = PrescriptionSerializer(data, many=True)
+        return Response(serializer.data)
+    except:
+        return Response("User not found", status=404)

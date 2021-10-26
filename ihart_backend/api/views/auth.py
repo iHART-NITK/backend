@@ -77,7 +77,7 @@ def verifyIfRegistered(request):
 @permission_classes([IsAuthenticated])
 def verifyToken(request):
     if (request.user.id == int(request.POST['id'])):
-        return Response(True)
+        return Response(True,status=200)
     else:
         return Response(False, status=403)
 

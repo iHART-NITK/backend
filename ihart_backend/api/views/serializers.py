@@ -71,16 +71,30 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
 class AppointmentSerializer(serializers.ModelSerializer):
     status = serializers.CharField(source='get_status_display')
+    doctor_name = serializers.SerializerMethodField()
+    has_prescriptions = serializers.SerializerMethodField()
+
+    def get_doctor_name(self, obj):
+        doc = obj.schedule.user
+        return doc.first_name + ' ' + doc.last_name
+        # return doc.first_name + " " + doc.last_name
+    
+    def get_has_prescriptions(self, obj):
+        diags = Diagnosis.objects.filter(appointment=obj)
+        return Prescription.objects.filter(diagnosis__in=diags).exists()
+
     class Meta:
         model = Appointment
         fields = (
             'id',
             'schedule',
             'user',
+            'doctor_name',
             'date',
             'start_time',
             'status',
-            'create_time'
+            'create_time',
+            'has_prescriptions'
         )
 
 

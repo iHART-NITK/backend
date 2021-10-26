@@ -38,6 +38,7 @@ urlpatterns = [
     path('prescription/<int:pk>/', prescription.prescription, name="prescription"),
     path('prescription/create', prescription.create, name="prescription-create"),
     path('user/<int:pk>/prescription', prescription.prescriptionsByUser,name = "prescriptions-by-user"),
+    path('user/<int:pk>/appointment/<int:a_pk>/prescriptions',prescription.prescriptionsByUserAppointment, name = "prescriptions-by-user-appointment"),
 
     path('emergency/create/', emergency.create, name="emergency-create"),
     path('emergency/locations/', emergency.locations, name="locations"),

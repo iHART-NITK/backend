@@ -32,7 +32,7 @@ class User(AbstractUser):
     ]
 
     # TODO: Create default image and set this to default value
-    photo = models.URLField(verbose_name="Profile Image URL", default="https://www.gravatar.com/avatar/?d=mp")
+    photo = models.URLField(verbose_name="Profile Image URL", default="https://www.gravatar.com/avatar/?d=mp", max_length=256)
     user_type = models.CharField(
         max_length=3,
         choices=USER_TYPE_CHOICES,
