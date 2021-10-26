@@ -32,11 +32,7 @@ class User(AbstractUser):
     ]
 
     # TODO: Create default image and set this to default value
-    photo = models.ForeignKey(
-        'Document',
-        on_delete=models.SET_NULL,
-        null=True,
-        verbose_name="User Photo ID")
+    photo = models.URLField(verbose_name="Profile Image URL", default="https://www.gravatar.com/avatar/?d=mp")
     user_type = models.CharField(
         max_length=3,
         choices=USER_TYPE_CHOICES,
