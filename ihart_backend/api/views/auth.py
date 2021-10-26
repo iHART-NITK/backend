@@ -73,6 +73,13 @@ def verifyIfRegistered(request):
             "verified": False
         }, status=202)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def verifyToken(request):
+    if (request.user.id == int(request.POST['id'])):
+        return Response(True)
+    else:
+        return Response(False, status=403)
 
 class CustomAuthToken(ObtainAuthToken):
 

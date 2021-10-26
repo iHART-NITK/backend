@@ -23,7 +23,8 @@ class UserSerializer(serializers.ModelSerializer):
             'phone',
             'user_type',
             'full_name',
-            'gender'
+            'gender',
+            'customer_id'
         )
         read_only_fields = ['full_name']
         validators = [
