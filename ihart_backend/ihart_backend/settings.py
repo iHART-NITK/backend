@@ -33,7 +33,7 @@ AUTH_USER_MODEL = 'api.User'
 
 # Application definition
 
-CORS_ORIGIN_ALLOW_ALL=True
+CORS_ORIGIN_ALLOW_ALL = True
 
 INSTALLED_APPS = [
     'api',
