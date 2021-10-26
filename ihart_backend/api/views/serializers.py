@@ -24,7 +24,8 @@ class UserSerializer(serializers.ModelSerializer):
             'user_type',
             'full_name',
             'gender',
-            'customer_id'
+            'customer_id',
+            'photoURL'
         )
         read_only_fields = ['full_name']
         validators = [
