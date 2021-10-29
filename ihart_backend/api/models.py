@@ -1,10 +1,15 @@
+'''
+Models (Database Schema) for each entity is stored here.
+The Django ORM uses this schema to create tables in the database
+and perform CRUD operations on the database.
+'''
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-# User Model, stores information on all personnel
-
-
 class User(AbstractUser):
+    '''
+    User Model, stores information on all personnel
+    '''
     USER_TYPE_CHOICES = [
         ('Stu', "Student"),
         ('Fac', "Faculty"),
@@ -31,8 +36,10 @@ class User(AbstractUser):
         ('N', "Would not like to disclose")
     ]
 
-    # TODO: Create default image and set this to default value
-    photo = models.URLField(verbose_name="Profile Image URL", default="https://www.gravatar.com/avatar/?d=mp", max_length=256)
+    photo = models.URLField(
+        verbose_name="Profile Image URL",
+        default="https://www.gravatar.com/avatar/?d=mp",
+        max_length=256)
     user_type = models.CharField(
         max_length=3,
         choices=USER_TYPE_CHOICES,
@@ -53,10 +60,10 @@ class User(AbstractUser):
         max_length=50, verbose_name="Forgot Password Token")
     customer_id = models.CharField(max_length=30, verbose_name="Google Customer ID")
 
-# Medical History Model, stores data on each user's medical history
-
-
 class MedicalHistory(models.Model):
+    '''
+    Medical History Model, stores data on each user's medical history
+    '''
     CATEGORY_CHOICES = [
         ('A', "Allergies"),
         ('M', "Medications"),
@@ -73,13 +80,10 @@ class MedicalHistory(models.Model):
         verbose_name="Category")
     description = models.TextField(verbose_name="Description")
 
-# Specialization table can be dropped, instead get_FOO_display can be used from User table itself
-# https://docs.djangoproject.com/en/3.2/ref/models/instances/#django.db.models.Model.get_FOO_display
-
-# Schedule Model, stores data on each doctor's schedule
-
-
 class Schedule(models.Model):
+    '''
+    Schedule Model, stores data on each doctor's schedule
+    '''
     DAY_CHOICES = [
         ('Mon', "Monday"),
         ('Tue', "Tuesday"),
@@ -101,10 +105,10 @@ class Schedule(models.Model):
         choices=DAY_CHOICES,
         verbose_name="Day of Visit")
 
-# Appointment Model, stores data on all scheduled appointments
-
-
 class Appointment(models.Model):
+    '''
+    Appointment Model, stores data on all scheduled appointments
+    '''
     STATUS_CHOICES = [
         ('VI', "Visited"),
         ('DM', "Doctor Missing"),
@@ -131,21 +135,24 @@ class Appointment(models.Model):
         auto_now_add=True,
         verbose_name="Create Time")
 
-# Diagnosis Model, stores data on the diagnosis given for a particular visit
-
-
 class Diagnosis(models.Model):
+    '''
+    Diagnosis Model, stores data on the diagnosis given for a particular visit
+    '''
     appointment = models.ForeignKey(
         'Appointment',
         on_delete=models.CASCADE,
         verbose_name="Appointment ID")
     diagnosis = models.TextField(verbose_name="Diagnosis")
 
-# Prescription Model, stores data on the prescriptions that are related to
-# a particular diagnosis
+
 
 
 class Prescription(models.Model):
+    '''
+    Prescription Model, stores data on the prescriptions that are related to a particular diagnosis
+    '''
+
     diagnosis = models.ForeignKey(
         'Diagnosis',
         on_delete=models.CASCADE,
@@ -157,21 +164,20 @@ class Prescription(models.Model):
     dosage = models.CharField(max_length=10, verbose_name="Daily Dosage")
     medicine_units = models.PositiveIntegerField(verbose_name="Medicine Units")
 
-# Transaction Model, stores data on distribution of inventory to students
-# & faculty
-
-
 class Transaction(models.Model):
+    '''
+    Transaction Model, stores data on distribution of inventory to students & faculty
+    '''
     prescription = models.ForeignKey(
         'Prescription',
         on_delete=models.CASCADE,
         verbose_name="Prescription ID")
     units = models.PositiveIntegerField(verbose_name="Units")
 
-# Inventory Model, stores data on the inventory of the HCC
-
-
 class Inventory(models.Model):
+    '''
+    Inventory Model, stores data on the inventory of the HCC
+    '''
     CATEGORY_CHOICES = [
         ('M', "Medicine"),
         ('E', "Equipment")
@@ -188,11 +194,11 @@ class Inventory(models.Model):
         verbose_name="Category")
     cost_per_unit = models.FloatField(verbose_name="Cost Per Unit")
 
-# Emergency Model, stores data on Emergency requests made
-
-
 class Emergency(models.Model):
-    # TODO: Add more locations or enable geolocation access
+    '''
+    Emergency Model, stores data on Emergency requests made
+    '''
+    # To do: Add more locations or enable geolocation access
     LOCATION_CHOICES = [
         ('BEA', "Beach Gate"),
         ('UND', "Underpass"),
@@ -228,17 +234,16 @@ class Emergency(models.Model):
         choices=STATUS_CHOICES,
         verbose_name="Status")
 
-# Document Model, stores all documents and files in the database
-
-
 class Document(models.Model):
+    '''
+    Document Model, stores all documents and files in the database
+    '''
     file = models.BinaryField()
 
-# Medical Certificate Model, stores data on the sickness certificates to
-# be submitted by students
-
-
 class MedicalCertificate(models.Model):
+    '''
+    Medical Certificate Model, stores data on the sickness certificates to be submitted by students
+    '''
     diagnosis = models.ForeignKey(
         'Diagnosis',
         on_delete=models.CASCADE,
@@ -248,8 +253,8 @@ class MedicalCertificate(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Document ID")
 
-# Config Model, stores basic config values
-
-
 class Config(models.Model):
+    '''
+    Config Model, stores basic config values
+    '''
     obj = models.JSONField()

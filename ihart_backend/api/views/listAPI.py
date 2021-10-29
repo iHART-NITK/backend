@@ -1,15 +1,16 @@
-from rest_framework.decorators import api_view, permission_classes
+'''
+List API Module
+Contains a view that documents all the endpoints of our API service
+'''
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
-from rest_framework.authtoken.models import Token
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
-
-from .serializers import UserSerializer
 
 
 @api_view(['GET'])
 def listApis(request):
-    # Describe all API routes
+    '''
+    REST endpoint to document all endpoints
+    '''
     routes = [{"endpoint": "/api/list-apis/",
                "methods": "GET",
                "body": None,
@@ -23,7 +24,8 @@ def listApis(request):
               {"endpoint": "/api/token-auth/",
                "methods": "POST",
                "body": "username, password",
-               "description": "Verifies a user's credentials and returns the auth token associated with the user if credentials are valid",
+               "description": "Verifies a user's credentials and returns the auth token \
+                    associated with the user if credentials are valid",
                "is_authenticated": False},
               {"endpoint": "/api/test/",
                "methods": "GET",
@@ -48,7 +50,8 @@ def listApis(request):
               {"endpoint": "/api/<resource>/create",
                "methods": "POST",
                "body": "depends on model/resource",
-               "description": "Create a new object in the model( user model does not have this endpoint)",
+               "description": "Create a new object in the model \
+                   (user model does not have this endpoint)",
                "is_authenticated": True},
               {"endpoint": "/api/user/<int:pk>/<resource>",
                "methods": "GET",

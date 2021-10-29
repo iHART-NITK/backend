@@ -16,9 +16,7 @@
 ## Installation Steps for Localhost Setup
 
 ```bash
-pip install django
-pip install mysqlclient
-pip install django-environ
+pip install -r requirements.txt
 
 mysql -u <username> -p
 >> create database iHART

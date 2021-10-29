@@ -1,10 +1,16 @@
+'''
+Serializers Module
+Contains all the serializers to serialize data into JSON format for REST endpoints
+'''
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from ..models import User, Inventory, Emergency, MedicalHistory, Schedule, Appointment, Diagnosis, Prescription, Transaction
-
+from .models import *
 
 class UserSerializer(serializers.ModelSerializer):
+    '''
+    Serializer to serialize User objects
+    '''
     full_name = serializers.CharField(source="get_full_name", read_only=True)
     user_type = serializers.CharField(source='get_user_type_display')
     gender = serializers.CharField(source='get_gender_display')
@@ -13,6 +19,9 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
     class Meta:
+        '''
+        Meta class to define the Model to use for ModelSerializer
+        '''
         model = User
         fields = (
             'id',
@@ -34,19 +43,28 @@ class UserSerializer(serializers.ModelSerializer):
                 fields=['username', 'email']
             )
         ]
+
     def get_full_name(self, obj):
+        '''
+        Function to generate the user's full name from first/middle/last name
+        '''
         user = User.objects.get(username=obj["username"])
-        
+
         if user.middle_name != "":
             return f"{user.first_name} {user.middle_name} {user.last_name}"
-        else:
-            return f"{user.first_name} {user.last_name}"
+        return f"{user.first_name} {user.last_name}"
 
 
 class MedicalHistorySerializer(serializers.ModelSerializer):
+    '''
+    Serializer to serialize Medical History objects
+    '''
     category = serializers.CharField(source='get_category_display')
 
     class Meta:
+        '''
+        Meta class to define the Model to use for ModelSerializer
+        '''
         model = MedicalHistory
         fields = (
             'id',
@@ -57,8 +75,14 @@ class MedicalHistorySerializer(serializers.ModelSerializer):
 
 
 class ScheduleSerializer(serializers.ModelSerializer):
+    '''
+    Serializer to serialize Schedule objects
+    '''
     day = serializers.CharField(source='get_day_display')
     class Meta:
+        '''
+        Meta class to define the Model to use for ModelSerializer
+        '''
         model = Schedule
         fields = (
             'id',
@@ -70,20 +94,17 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
+    '''
+    Serializer to serialize Appointment objects
+    '''
     status = serializers.CharField(source='get_status_display')
     doctor_name = serializers.SerializerMethodField()
     has_prescriptions = serializers.SerializerMethodField()
 
-    def get_doctor_name(self, obj):
-        doc = obj.schedule.user
-        return doc.first_name + ' ' + doc.last_name
-        # return doc.first_name + " " + doc.last_name
-    
-    def get_has_prescriptions(self, obj):
-        diags = Diagnosis.objects.filter(appointment=obj)
-        return Prescription.objects.filter(diagnosis__in=diags).exists()
-
     class Meta:
+        '''
+        Meta class to define the Model to use for ModelSerializer
+        '''
         model = Appointment
         fields = (
             'id',
@@ -97,10 +118,30 @@ class AppointmentSerializer(serializers.ModelSerializer):
             'has_prescriptions'
         )
 
+    def get_doctor_name(self, obj):
+        '''
+        Function to get the Doctor's full name from their first/last name
+        '''
+        doc = obj.schedule.user
+        return doc.first_name + ' ' + doc.last_name
+        # return doc.first_name + " " + doc.last_name
+
+    def get_has_prescriptions(self, obj):
+        '''
+        Function to check if prescriptions exist for a given appointment
+        '''
+        diags = Diagnosis.objects.filter(appointment=obj)
+        return Prescription.objects.filter(diagnosis__in=diags).exists()
+
 
 class DiagnosisSerializer(serializers.ModelSerializer):
-
+    '''
+    Serializer to serialize Diagnosis objects
+    '''
     class Meta:
+        '''
+        Meta class to define the Model to use for ModelSerializer
+        '''
         model = Diagnosis
         fields = (
             'id',
@@ -110,9 +151,15 @@ class DiagnosisSerializer(serializers.ModelSerializer):
 
 
 class PrescriptionSerializer(serializers.ModelSerializer):
+    '''
+    Serializer to serialize Prescription objects
+    '''
     diagnosis = serializers.CharField(source='diagnosis.diagnosis', read_only=True)
     inventory = serializers.CharField(source='inventory.name', read_only=True)
     class Meta:
+        '''
+        Meta class to define the Model to use for ModelSerializer
+        '''
         model = Prescription
         fields = (
             'id',
@@ -124,14 +171,25 @@ class PrescriptionSerializer(serializers.ModelSerializer):
 
 
 class EmergencySerializer(serializers.ModelSerializer):
-    def create(self, obj):
-        newObj = Emergency.objects.create(user=obj['user'], reason=obj['reason'], location=obj['get_location_display'], status=obj['get_status_display'])
+    '''
+    Serializer to serialize Emergency objects
+    '''
+    def create(self, validated_data):
+        newObj = Emergency.objects.create(
+            user=validated_data['user'],
+            reason=validated_data['reason'],
+            location=validated_data['get_location_display'],
+            status=validated_data['get_status_display']
+        )
         return newObj
-    
+
     location = serializers.CharField(source='get_location_display')
     status = serializers.CharField(source='get_status_display')
 
     class Meta:
+        '''
+        Meta class to define the Model to use for ModelSerializer
+        '''
         model = Emergency
         fields = (
             'user',
@@ -142,8 +200,13 @@ class EmergencySerializer(serializers.ModelSerializer):
 
 
 class TransactionSerializer(serializers.ModelSerializer):
-
+    '''
+    Serializer to serialize Transaction objects
+    '''
     class Meta:
+        '''
+        Meta class to define the Model to use for ModelSerializer
+        '''
         model = Transaction
         fields = (
             'id',
@@ -153,8 +216,14 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 
 class InventorySerializer(serializers.ModelSerializer):
+    '''
+    Serializer to serialize Inventory objects
+    '''
     category = serializers.CharField(source='get_category_display')
     class Meta:
+        '''
+        Meta class to define the Model to use for ModelSerializer
+        '''
         model = Inventory
         fields = (
             'id',
