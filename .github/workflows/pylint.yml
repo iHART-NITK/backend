@@ -21,5 +21,4 @@ jobs:
     - name: Analysing the code with pylint
       continue-on-error: true
       run: |
-        pylint `find . -type d -name migrations -prune -o -name '*.py'| grep -v __ |xargs`
-        
+        python -m pylint `find . -type d -name migrations -prune -o -name '*.py' | grep -v __ | grep .py` --function-naming-style=camelCase --argument-naming-style=any --variable-naming-style=camelCase --module-naming-style=camelCase        
