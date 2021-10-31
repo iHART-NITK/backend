@@ -74,7 +74,7 @@ def verifyIfRegistered(request):
     '''
     REST endpoint to verify an incoming login request
     '''
-    email = request.POST['email']
+    email = request.data['email']
     userType = checkUserType(email)
     if userType is None:
         return Response({
@@ -83,8 +83,7 @@ def verifyIfRegistered(request):
         }, status=403)
     try:
         user = User.objects.get(email=email)
-        if request.POST['customer_id'] == user.customer_id:
-            # To do: Change this to only get, using get_or_create only for debugging now
+        if request.data['customer_id'] == user.customer_id:
             token, _ = Token.objects.get_or_create(user=user)
             return Response({
                 "verified": True,
