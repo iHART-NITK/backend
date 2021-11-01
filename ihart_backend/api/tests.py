@@ -1,12 +1,15 @@
 from rest_framework.test import APITestCase
-from .models import User
+from rest_framework.authtoken.models import Token
+from .models import Emergency, User
 from django.urls import reverse
 
-def authenticate_suer(client) :
-    email = "test02@nitk.edu.in"
+def authenticate_user(client) :
+    email = "test01@nitk.edu.in"
     cid = "11111222223333344444"
     user = User.objects.create(username="test01", password="PA$$w0rD123", email=email , customer_id=cid)
     client.force_authenticate(user=user)
+    token = Token.objects.create(user=user)
+    client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
 
 class ListAPITests(APITestCase):
     '''
@@ -106,10 +109,42 @@ class EmergencyTests(APITestCase):
         '''
         Ensure that GET requests are made successfully
         '''
-        authenticate_suer(self.client)
+        authenticate_user(self.client)
         url = reverse('emergency-list')
         response = self.client.get(url, format="json")
 
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.data, list)
         print(f"\nGET Request on {url} tested successfully!")
+
+    def testPostEmergencies(self):
+        '''
+        Ensure that POST requests are made successfully when all data is sent
+        '''
+        authenticate_user(self.client)
+        url = reverse('emergency-create')
+        data = {
+            "location": "BEA",
+            "reason": "Test Reason",
+            "status": "R"
+        }
+        response = self.client.post(url, data, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, dict)
+
+        def validate_response(data):
+            keys = ["reason", "location", "status"]
+            expected_response = {
+                "reason": "Test Reason", 
+                "location": "Beach Gate", 
+                "status": "Received"
+            }
+            for key in keys:
+                if expected_response[key] != data[key]:
+                    return False
+            return True
+
+        self.assertEqual(validate_response(response.data), True)
+        self.assertEqual(Emergency.objects.count(), 1)
+        print(f"\nPOST Request on {url} tested successfully!")
