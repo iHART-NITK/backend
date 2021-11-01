@@ -21,6 +21,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+    - name: Export Project Secret
+      run: |
+        export PROJECT_SECRET=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/urandom | head -c50)
     - name: Run Tests
       run: |
         python ihart_backend/manage.py test
