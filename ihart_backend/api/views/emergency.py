@@ -54,8 +54,9 @@ def emergencies(request):
         return Response(
             "Not Authorized to access Medical Histories.",
             status=401)
-    data = Emergency.objects.all
-    return Response(data)
+    data = Emergency.objects.all()
+    serializer = EmergencySerializer(data, many=True)
+    return Response(serializer.data)
 
 
 @api_view(['POST'])
