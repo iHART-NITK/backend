@@ -1,6 +1,8 @@
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
-from .models import Emergency, MedicalHistory, User
+import datetime
+
+from .models import Appointment, Diagnosis, Emergency, Inventory, MedicalHistory, Schedule, User, Appointment, Prescription
 from django.urls import reverse
 
 def authenticate_user(client) :
@@ -211,3 +213,38 @@ class MedicalHistoryTests(APITestCase):
         self.assertEqual(validate_response(response.data), True)
         self.assertEqual(MedicalHistory.objects.count(), 1)
         print(f"\nPOST Request on {url} tested successfully!")
+    
+class Prescriptions(APITestCase):
+    '''
+    Test cases for the Prescriptions Module
+    '''
+    def testGetAllPrescriptions(self):
+        '''
+        Ensure that GET requests for all prescriptions
+        are made successfully
+        '''
+        authenticate_user(self.client)
+        url = reverse('prescriptions')
+        response = self.client.get(url, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, list)
+        print(f"\nGET Request on {url} tested successfully!")
+
+    def testGetAppointmentPrescriptions(self):
+        '''
+        Ensure that GET requests for prescriptions
+        corresponding to an appointment are made successfully
+        '''
+        
+        authenticate_user(self.client)
+        user1 = User.objects.create(username="doctor", password="PA$$w0rD123", email='email1@email.com' , customer_id="123123123")
+        user2 = User.objects.create(username="patient", password="PA$$w0rD345", email='email2@email.com' , customer_id="456456456")
+        schedule1 = Schedule.objects.create(user=user1, entry_time=datetime.datetime.now().time(), exit_time=datetime.datetime.now().time(), day='Mon')
+        appointment1 = Appointment.objects.create(schedule=schedule1, user=user2, date = datetime.date.today(), start_time=datetime.datetime.now().time(), status='VI')
+        url = reverse('prescriptions-by-user-appointment', kwargs={'pk':user2.id, 'a_pk': appointment1.id})
+        response = self.client.get(url, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, list)
+        print(f"\nGET Request on {url} tested successfully!")
