@@ -22,15 +22,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Prepare Test Env
+      
       run: |
         cp ihart_backend/ihart_backend/example.env ihart_backend/ihart_backend/.env
-        sed -i 's/db_username/ihart_test/g' ihart_backend/ihart_backend/.env
-        sed -i 's/db_password/ihart_test/g' ihart_backend/ihart_backend/.env
+        sed -i 's/db_username/root/g' ihart_backend/ihart_backend/.env
+        sed -i 's/db_password/root/g' ihart_backend/ihart_backend/.env
         sudo systemctl start mysql.service
-        mysql -e "CREATE DATABASE ihart_test /*\!40100 DEFAULT CHARACTER SET utf8 */;"
-        mysql -e "CREATE USER ihart_test@localhost IDENTIFIED BY 'ihart_test';"
-        mysql -e "GRANT ALL PRIVILEGES ON ihart_test.* TO 'ihart_test'@'localhost';"
-        mysql -e "FLUSH PRIVILEGES;"
+        sudo mysql -e 'CREATE DATABASE IHART;' -u "root" -p "root"
         sleep 20
         
     - name: Run Tests
