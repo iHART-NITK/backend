@@ -101,6 +101,7 @@ class AuthTests(APITestCase):
 
         print(f"\nPOST Request on {url} tested successfully!")
 
+
 class EmergencyTests(APITestCase):
     '''
     Test cases for the Emergency Module
@@ -148,3 +149,20 @@ class EmergencyTests(APITestCase):
         self.assertEqual(validate_response(response.data), True)
         self.assertEqual(Emergency.objects.count(), 1)
         print(f"\nPOST Request on {url} tested successfully!")
+
+    
+class MedicalHistoryTests(APITestCase):
+    '''
+    Test cases for the Medical History Module
+    '''
+    def testGetMedicalHis(self):
+        '''
+        Ensure that GET requests are made successfully
+        '''
+        authenticate_user(self.client)
+        url = reverse('medical-histories')
+        response = self.client.get(url, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, list)
+        print(f"\nGET Request on {url} tested successfully!")
