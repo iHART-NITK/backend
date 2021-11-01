@@ -113,3 +113,22 @@ class EmergencyTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.data, list)
         print(f"\nGET Request on {url} tested successfully!")
+
+
+
+    
+class MedicalHistoryTests(APITestCase):
+    '''
+    Test cases for the Medical History Module
+    '''
+    def testGetMedicalHis(self):
+        '''
+        Ensure that GET requests are made successfully
+        '''
+        authenticate_suer(self.client)
+        url = reverse('medical-histories')
+        response = self.client.get(url, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, list)
+        print(f"\nGET Request on {url} tested successfully!")
