@@ -27,8 +27,8 @@ jobs:
         cp ihart_backend/ihart_backend/example.env ihart_backend/ihart_backend/.env
         sed -i 's/db_username/root/g' ihart_backend/ihart_backend/.env
         sed -i 's/db_password/root/g' ihart_backend/ihart_backend/.env
-        sudo systemctl start mysql.service
-        sudo mysql -e 'CREATE DATABASE IHART;' -u "root" -p "root"
+        sudo /etc/init.d/mysql start
+        sudo mysql -u root -e 'CREATE DATABASE IHART;' -u "root" -p "root"
         sleep 20
         
     - name: Run Tests
