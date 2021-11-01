@@ -106,6 +106,18 @@ class EmergencyTests(APITestCase):
     '''
     Test cases for the Emergency Module
     '''
+    def testGetLocations(self):
+        '''
+        Ensure that GET requests are made successfully
+        '''
+        authenticate_user(self.client)
+        url = reverse('locations')
+        response = self.client.get(url, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, dict)
+        print(f"\nGET Request on {url} tested successfully!")
+
     def testGetEmergencies(self):
         '''
         Ensure that GET requests are made successfully
