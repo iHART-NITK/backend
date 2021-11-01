@@ -28,7 +28,7 @@ jobs:
         sed -i 's/db_username/root/g' ihart_backend/ihart_backend/.env
         sed -i 's/db_password/root/g' ihart_backend/ihart_backend/.env
         sudo systemctl start mysql.service
-        sudo mysql -u root -p root -e 'CREATE DATABASE IHART;' -u "root" -p "root"
+        sudo mysql -uroot -proot -e 'CREATE DATABASE IHART;'
         sleep 20
         
     - name: Run Tests
