@@ -1,6 +1,6 @@
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
-from .models import Emergency, User
+from .models import Emergency, MedicalHistory, User
 from django.urls import reverse
 
 def authenticate_user(client) :
@@ -166,3 +166,36 @@ class MedicalHistoryTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.data, list)
         print(f"\nGET Request on {url} tested successfully!")
+
+
+    def testPostMedical(self):
+        '''
+        Ensure that POST requests are made successfully when all data is sent
+        '''
+        authenticate_user(self.client)
+        url = reverse('medical-history-create')
+        data = {
+            
+            "category": "A", 
+            "description": "test description",
+        }
+        response = self.client.post(url, data, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, dict)
+
+        def validate_response(data):
+            keys = ["category", "description"]
+            expected_response = {
+                "category": "Allergies", 
+                "description": "test description", 
+               
+            }
+            for key in keys:
+                if expected_response[key] != data[key]:
+                    return False
+            return True
+
+        self.assertEqual(validate_response(response.data), True)
+        self.assertEqual(MedicalHistory.objects.count(), 1)
+        print(f"\nPOST Request on {url} tested successfully!")
