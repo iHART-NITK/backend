@@ -105,7 +105,7 @@ class EmergencyTests(APITestCase):
         user = User.objects.create(username="test01", password="PA$$w0rD123", email=email , customer_id=cid)
 
         url = reverse('emergency-list')
-        self.client.force_login(user=user)
+        self.client.force_authenticate(user=user)
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.data, list)
