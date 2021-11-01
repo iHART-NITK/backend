@@ -23,7 +23,7 @@ jobs:
         pip install -r requirements.txt
     - name: Export Project Secret
       run: |
-        export PROJECT_SECRET=$(tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/urandom | head -c50)
+        export PROJECT_SECRET=$(python3 -c 'import random; result = "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)]); print(result)')
     - name: Run Tests
       run: |
         python ihart_backend/manage.py test
