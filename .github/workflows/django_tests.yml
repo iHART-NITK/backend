@@ -21,9 +21,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Export Project Secret
+    - name: Copy env file
       run: |
-        export PROJECT_SECRET=$(python3 -c 'import random; result = "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)]); print(result)')
+        cp ihart_backend/ihart_backend/example.env ihart_backend/ihart_backend/.env
     - name: Run Tests
       run: |
         python ihart_backend/manage.py test
