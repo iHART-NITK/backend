@@ -44,6 +44,20 @@ def location(request, pk):
     return Response(data)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def emergencies(request):
+    '''
+    REST Endpoint to fetch all emergencies
+    '''
+    if not perms(request):
+        return Response(
+            "Not Authorized to access Medical Histories.",
+            status=401)
+    data = Emergency.objects.all
+    return Response(data)
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create(request):

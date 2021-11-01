@@ -91,3 +91,22 @@ class AuthTests(APITestCase):
         self.assertTrue(response3.data["error"])
 
         print(f"\nPOST Request on {url} tested successfully!")
+
+class EmergencyTests(APITestCase):
+    '''
+    Test cases for the Emergency Module
+    '''
+    def testGetEmergencies(self):
+        '''
+        Ensure that GET requests are made successfully
+        '''
+        email = "test02@nitk.edu.in"
+        cid = "11111222223333344444"
+        user = User.objects.create(username="test01", password="PA$$w0rD123", email=email , customer_id=cid)
+
+        url = reverse('emergency-list')
+        self.client.force_login(user=user)
+        response = self.client.get(url, format="json")
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, list)
+        print(f"\nGET Request on {url} tested successfully!")
