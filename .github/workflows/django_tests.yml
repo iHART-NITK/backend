@@ -32,6 +32,7 @@ jobs:
         mysql -e "GRANT ALL PRIVILEGES ON ihart_test.* TO 'ihart_test'@'localhost';"
         mysql -e "FLUSH PRIVILEGES;"
         sleep 20
+        
     - name: Run Tests
       run: |
         python ihart_backend/manage.py test
