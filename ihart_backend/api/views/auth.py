@@ -133,3 +133,19 @@ class CustomAuthToken(ObtainAuthToken):
             'token': token.key,
             'id': user.id,
         })
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout(request):
+    '''
+    REST endpoint to log out a user by deleting their token from the database
+    '''
+    try:
+        Token.objects.get(user=request.user).delete()
+        return Response({"logged_out": True}, status=200)
+    except:
+        return Response({
+            "error": True,
+            "error_msg": "Could not log the user out successfully!"
+        }, status=500)
+    
