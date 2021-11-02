@@ -1,6 +1,17 @@
 from rest_framework.test import APITestCase
-from .models import User
+from rest_framework.authtoken.models import Token
+import datetime
+
+from .models import Appointment, Diagnosis, Emergency, Inventory, MedicalHistory, Schedule, User, Appointment, Prescription
 from django.urls import reverse
+
+def authenticate_user(client) :
+    email = "test01@nitk.edu.in"
+    cid = "11111222223333344444"
+    user = User.objects.create(username="test01", password="PA$$w0rD123", email=email , customer_id=cid)
+    client.force_authenticate(user=user)
+    token = Token.objects.create(user=user)
+    client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
 
 class ListAPITests(APITestCase):
     '''
@@ -91,3 +102,149 @@ class AuthTests(APITestCase):
         self.assertTrue(response3.data["error"])
 
         print(f"\nPOST Request on {url} tested successfully!")
+
+
+class EmergencyTests(APITestCase):
+    '''
+    Test cases for the Emergency Module
+    '''
+    def testGetLocations(self):
+        '''
+        Ensure that GET requests are made successfully
+        '''
+        authenticate_user(self.client)
+        url = reverse('locations')
+        response = self.client.get(url, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, dict)
+        print(f"\nGET Request on {url} tested successfully!")
+
+    def testGetEmergencies(self):
+        '''
+        Ensure that GET requests are made successfully
+        '''
+        authenticate_user(self.client)
+        url = reverse('emergency-list')
+        response = self.client.get(url, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, list)
+        print(f"\nGET Request on {url} tested successfully!")
+
+    def testPostEmergencies(self):
+        '''
+        Ensure that POST requests are made successfully when all data is sent
+        '''
+        authenticate_user(self.client)
+        url = reverse('emergency-create')
+        data = {
+            "location": "BEA",
+            "reason": "Test Reason",
+            "status": "R"
+        }
+        response = self.client.post(url, data, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, dict)
+
+        def validate_response(data):
+            keys = ["reason", "location", "status"]
+            expected_response = {
+                "reason": "Test Reason", 
+                "location": "Beach Gate", 
+                "status": "Received"
+            }
+            for key in keys:
+                if expected_response[key] != data[key]:
+                    return False
+            return True
+
+        self.assertEqual(validate_response(response.data), True)
+        self.assertEqual(Emergency.objects.count(), 1)
+        print(f"\nPOST Request on {url} tested successfully!")
+
+    
+class MedicalHistoryTests(APITestCase):
+    '''
+    Test cases for the Medical History Module
+    '''
+    def testGetMedicalHis(self):
+        '''
+        Ensure that GET requests are made successfully
+        '''
+        authenticate_user(self.client)
+        url = reverse('medical-histories')
+        response = self.client.get(url, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, list)
+        print(f"\nGET Request on {url} tested successfully!")
+
+
+    def testPostMedical(self):
+        '''
+        Ensure that POST requests are made successfully when all data is sent
+        '''
+        authenticate_user(self.client)
+        url = reverse('medical-history-create')
+        data = {
+            
+            "category": "A", 
+            "description": "test description",
+        }
+        response = self.client.post(url, data, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, dict)
+
+        def validate_response(data):
+            keys = ["category", "description"]
+            expected_response = {
+                "category": "Allergies", 
+                "description": "test description", 
+               
+            }
+            for key in keys:
+                if expected_response[key] != data[key]:
+                    return False
+            return True
+
+        self.assertEqual(validate_response(response.data), True)
+        self.assertEqual(MedicalHistory.objects.count(), 1)
+        print(f"\nPOST Request on {url} tested successfully!")
+    
+class Prescriptions(APITestCase):
+    '''
+    Test cases for the Prescriptions Module
+    '''
+    def testGetAllPrescriptions(self):
+        '''
+        Ensure that GET requests for all prescriptions
+        are made successfully
+        '''
+        authenticate_user(self.client)
+        url = reverse('prescriptions')
+        response = self.client.get(url, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, list)
+        print(f"\nGET Request on {url} tested successfully!")
+
+    def testGetAppointmentPrescriptions(self):
+        '''
+        Ensure that GET requests for prescriptions
+        corresponding to an appointment are made successfully
+        '''
+        
+        authenticate_user(self.client)
+        user1 = User.objects.create(username="doctor", password="PA$$w0rD123", email='email1@email.com' , customer_id="123123123")
+        user2 = User.objects.create(username="patient", password="PA$$w0rD345", email='email2@email.com' , customer_id="456456456")
+        schedule1 = Schedule.objects.create(user=user1, entry_time=datetime.datetime.now().time(), exit_time=datetime.datetime.now().time(), day='Mon')
+        appointment1 = Appointment.objects.create(schedule=schedule1, user=user2, date = datetime.date.today(), start_time=datetime.datetime.now().time(), status='VI')
+        url = reverse('prescriptions-by-user-appointment', kwargs={'pk':user2.id, 'a_pk': appointment1.id})
+        response = self.client.get(url, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, list)
+        print(f"\nGET Request on {url} tested successfully!")

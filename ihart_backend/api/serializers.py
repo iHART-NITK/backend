@@ -55,11 +55,36 @@ class UserSerializer(serializers.ModelSerializer):
         return f"{user.first_name} {user.last_name}"
 
 
+# class MedicalHistorySerializer(serializers.ModelSerializer):
+#     '''
+#     Serializer to serialize Medical History objects
+#     '''
+#     category = serializers.CharField(source='get_category_display')
+
+#     class Meta:
+#         '''
+#         Meta class to define the Model to use for ModelSerializer
+#         '''
+#         model = MedicalHistory
+#         fields = (
+#             'user',
+#             'category',
+#             'description'
+#         )
 class MedicalHistorySerializer(serializers.ModelSerializer):
     '''
     Serializer to serialize Medical History objects
     '''
+    def create(self, validated_data):
+        newObj = MedicalHistory.objects.create(
+            user=validated_data['user'],
+            category=validated_data['get_category_display'],
+            description=validated_data['description']
+            )
+        return newObj
+
     category = serializers.CharField(source='get_category_display')
+   
 
     class Meta:
         '''
@@ -67,10 +92,9 @@ class MedicalHistorySerializer(serializers.ModelSerializer):
         '''
         model = MedicalHistory
         fields = (
-            'id',
             'user',
             'category',
-            'description'
+            'description'      
         )
 
 

@@ -70,6 +70,7 @@ urlpatterns += [
 
 # Emergency paths
 urlpatterns += [
+    path('emergency/', emergency.emergencies, name="emergency-list"),
     path('emergency/create/', emergency.create, name="emergency-create"),
     path('emergency/locations/', emergency.locations, name="locations"),
     path('emergency/location/<int:pk>/', emergency.location, name="location"),

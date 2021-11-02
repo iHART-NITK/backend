@@ -4,6 +4,7 @@ Contains views to perform CRUD operations and specialized operations on Medical 
 '''
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
 
 from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAuthenticated
@@ -62,16 +63,21 @@ def medicalHistory(request, pk):
         return Response("Invalid data sent!", status=401)
 
 
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create(request):
     '''
-    REST endpoint to create a new medical history object
+    REST endpoint to create a medical history 
     '''
-    serializer = MedicalHistorySerializer(data=request.data)
+    token = request.headers.get('Authorization').split()[1]
+    data = request.data.copy()
+    data["user"] = Token.objects.get(key=token).user.id
+    serializer = MedicalHistorySerializer(data=data)
     if serializer.is_valid():
         serializer.save()
-    return Response(serializer.data)
+    return Response(serializer.data)   
 
 
 @api_view(['GET'])
