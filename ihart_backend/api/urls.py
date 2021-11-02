@@ -15,6 +15,7 @@ urlpatterns += [
     path('token-auth/', auth.CustomAuthToken.as_view(), name="token-auth"),
     path('verify-user/', auth.verifyIfRegistered, name="verify-if-registered"),
     path('verify-token/', auth.verifyToken, name="verify-token"),
+    path('logout/', auth.logout, name="logout")
 ]
 
 # User Data paths
