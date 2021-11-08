@@ -31,6 +31,8 @@ urlpatterns += [
     path('medical-history/create/', medicalHistory.create, name="medical-history-create"),
     path('user/<int:pk>/medical-history/',
     medicalHistory.medicalHistoriesByUser, name="medical-histories-by-user"),
+    path('user/<int:pk>/medical-history/html',
+    medicalHistory.medicalHistoryByUserHtml, name="medical-histories-user-html"),
 ]
 
 # Schedule paths

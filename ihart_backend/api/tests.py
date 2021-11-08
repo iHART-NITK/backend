@@ -56,7 +56,7 @@ class AuthTests(APITestCase):
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(User.objects.get().username, "test01")
         print(f"\nPOST Request on {url} tested successfully!")
-    
+
     def testPostVerifyIfRegistered(self):
         email1 = "test02@nitk.edu.in"
         email2 = "test03.191cs101@nitk.edu.in"
@@ -151,8 +151,8 @@ class EmergencyTests(APITestCase):
         def validate_response(data):
             keys = ["reason", "location", "status"]
             expected_response = {
-                "reason": "Test Reason", 
-                "location": "Beach Gate", 
+                "reason": "Test Reason",
+                "location": "Beach Gate",
                 "status": "Received"
             }
             for key in keys:
@@ -164,7 +164,7 @@ class EmergencyTests(APITestCase):
         self.assertEqual(Emergency.objects.count(), 1)
         print(f"\nPOST Request on {url} tested successfully!")
 
-    
+
 class MedicalHistoryTests(APITestCase):
     '''
     Test cases for the Medical History Module
@@ -189,8 +189,7 @@ class MedicalHistoryTests(APITestCase):
         authenticate_user(self.client)
         url = reverse('medical-history-create')
         data = {
-            
-            "category": "A", 
+            "category": "A",
             "description": "test description",
         }
         response = self.client.post(url, data, format="json")
@@ -201,9 +200,8 @@ class MedicalHistoryTests(APITestCase):
         def validate_response(data):
             keys = ["category", "description"]
             expected_response = {
-                "category": "Allergies", 
-                "description": "test description", 
-               
+                "category": "Allergies",
+                "description": "test description",
             }
             for key in keys:
                 if expected_response[key] != data[key]:
@@ -213,7 +211,7 @@ class MedicalHistoryTests(APITestCase):
         self.assertEqual(validate_response(response.data), True)
         self.assertEqual(MedicalHistory.objects.count(), 1)
         print(f"\nPOST Request on {url} tested successfully!")
-    
+
 class Prescriptions(APITestCase):
     '''
     Test cases for the Prescriptions Module
@@ -236,7 +234,7 @@ class Prescriptions(APITestCase):
         Ensure that GET requests for prescriptions
         corresponding to an appointment are made successfully
         '''
-        
+
         authenticate_user(self.client)
         user1 = User.objects.create(username="doctor", password="PA$$w0rD123", email='email1@email.com' , customer_id="123123123")
         user2 = User.objects.create(username="patient", password="PA$$w0rD345", email='email2@email.com' , customer_id="456456456")

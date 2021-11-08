@@ -84,7 +84,7 @@ class MedicalHistorySerializer(serializers.ModelSerializer):
         return newObj
 
     category = serializers.CharField(source='get_category_display')
-   
+
 
     class Meta:
         '''
@@ -94,7 +94,7 @@ class MedicalHistorySerializer(serializers.ModelSerializer):
         fields = (
             'user',
             'category',
-            'description'      
+            'description'
         )
 
 
