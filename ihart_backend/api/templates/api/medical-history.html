@@ -1,0 +1,32 @@
+{% extends "api/layout.html" %}
+
+{% block title %} - Medical History{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row text-center my-2">
+            <img src="{{ user.photo }}" class="rounded-circle mx-auto d-block" alt="user-image" style="max-width: 200px;">
+        </div>
+        <div class="row my-2">
+            <h4 class="text-center"><strong>{{ user.full_name }}</strong></h4>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Category</th>
+                    <th scope="col">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data %}
+                    <tr>
+                        <td>{{ item.category }}</td>
+                        <td>{{ item.description }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

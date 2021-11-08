@@ -10,9 +10,12 @@ from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAuthenticated
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import render
+
+from hashlib import sha256
 
 from ..models import MedicalHistory, User
-from ..serializers import MedicalHistorySerializer
+from ..serializers import MedicalHistorySerializer, UserSerializer
 from .auth import perms
 
 
@@ -69,7 +72,7 @@ def medicalHistory(request, pk):
 @permission_classes([IsAuthenticated])
 def create(request):
     '''
-    REST endpoint to create a medical history 
+    REST endpoint to create a medical history
     '''
     token = request.headers.get('Authorization').split()[1]
     data = request.data.copy()
@@ -77,7 +80,7 @@ def create(request):
     serializer = MedicalHistorySerializer(data=data)
     if serializer.is_valid():
         serializer.save()
-    return Response(serializer.data)   
+    return Response(serializer.data)
 
 
 @api_view(['GET'])
@@ -97,3 +100,24 @@ def medicalHistoriesByUser(request, pk):
         return Response(serializer.data)
     except ObjectDoesNotExist:
         return Response("User not found", status=404)
+
+@api_view(['GET'])
+def medicalHistoryByUserHtml(request, pk):
+    user = User.objects.get(id=pk)
+    hashedToken = request.GET.get("token")
+    token = Token.objects.get(user=user).key
+    shaHash = sha256()
+    shaHash.update(token.encode('utf-8'))
+    if (hashedToken != shaHash.hexdigest()):
+        return Response({
+            "error": True,
+            "error_msg": "Hashes do not match!"
+        }, status=403)
+
+    data = MedicalHistory.objects.filter(user=user)
+    dataSerialized = MedicalHistorySerializer(data, many=True)
+    userSerialized = UserSerializer(user)
+    return render(request, "api/medical-history.html", {
+        "user": userSerialized.data,
+        "data": dataSerialized.data
+    })
