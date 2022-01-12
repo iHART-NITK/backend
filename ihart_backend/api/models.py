@@ -5,6 +5,10 @@ and perform CRUD operations on the database.
 '''
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from gdstorage.storage import GoogleDriveStorage
+
+# Define Google Drive Storage
+gd_storage = GoogleDriveStorage()
 
 class User(AbstractUser):
     '''
@@ -238,7 +242,7 @@ class Document(models.Model):
     '''
     Document Model, stores all documents and files in the database
     '''
-    file = models.BinaryField()
+    file = models.FileField(storage=gd_storage)
 
 class MedicalCertificate(models.Model):
     '''

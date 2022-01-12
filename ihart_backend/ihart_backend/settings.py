@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'gdstorage',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken'
@@ -150,3 +151,6 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+GOOGLE_DRIVE_STORAGE_JSON_KEY_FILE = BASE_DIR / 'ihart_backend' / env('GCLOUD_KEY_PATH')
+GOOGLE_DRIVE_STORAGE_MEDIA_ROOT = '/ihart'
