@@ -256,3 +256,20 @@ class InventorySerializer(serializers.ModelSerializer):
             'category',
             'cost_per_unit'
         )
+
+class DocumentSerializer(serializers.ModelSerializer):
+    '''
+    Serializer to serialize Document objects
+    '''
+    filename = serializers.CharField(source='file.name', read_only=True)
+    filesize = serializers.CharField(source='file.size', read_only=True)
+    class Meta:
+        '''
+        Meta class to define the Model to use for ModelSerializer
+        '''
+        model = Document
+        fields = (
+            'id',
+            'filename',
+            'filesize',
+        )

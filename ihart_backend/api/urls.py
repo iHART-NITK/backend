@@ -4,7 +4,7 @@ URLs for the endpoints are stored in this file
 from django.urls import path
 
 from .views import listAPI, users, medicalHistory, schedule, appointment, diagnosis, \
-    prescription, emergency, auth, transaction, inventory
+    prescription, emergency, auth, transaction, inventory, document
 
 urlpatterns = []
 
@@ -94,4 +94,10 @@ urlpatterns += [
     path('inventory/', inventory.inventories, name="inventories"),
     path('inventory/<int:pk>/', inventory.inventory, name="inventory"),
     path('inventory/create/', inventory.create, name="inventory-create"),
+]
+
+# Document paths
+urlpatterns += [
+    path('document/', document.documents, name="documents"),
+    path('document/<int:pk>/', document.document, name="document"),
 ]
