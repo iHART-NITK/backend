@@ -16,7 +16,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from ..serializers import UserSerializer
 from ..models import User
 
-non_admin_staff = []
+non_admin_staff = ['Stu', 'Fac']
+admin_emails = ["nishantnayak2001@gmail.com"]
 
 
 def perms(request):
@@ -36,6 +37,8 @@ def checkUserType(email):
     '''
     username = email.split('@')[0]
     domain = email.split('@')[-1]
+    if email in admin_emails:
+        return "Sta"
     if domain != "nitk.edu.in":
         return None
     rollNumber = username.split('.')[-1]
@@ -148,4 +151,3 @@ def logout(request):
             "error": True,
             "error_msg": "Could not log the user out successfully!"
         }, status=500)
-    
