@@ -22,7 +22,9 @@ def prescriptions(request):
     REST endpoint to fetch all prescriptions
     '''
     if not perms(request):
-        return Response("Not Authorized to access prescriptions.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     data = Prescription.objects.all()
     serializer = PrescriptionSerializer(data, many=True)
     return Response(serializer.data)
@@ -35,7 +37,9 @@ def prescription(request, pk):
     REST endpoint to fetch, update or delete a specific prescription
     '''
     if request.user.id != pk and not perms(request):
-        return Response("Not Authorized to access prescription.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     try:
         data = Prescription.objects.get(id=pk)
         if request.method == 'GET':
@@ -51,9 +55,13 @@ def prescription(request, pk):
             data.delete()
             return Response("Prescription deleted successfully!", status=200)
     except ObjectDoesNotExist:
-        return Response("Prescription not found!", status=404)
+        return Response({
+            "error_msg": "Prescription does not exist."
+        }, status=404)
     except APIException:
-        return Response("Invalid data submitted!", status=401)
+        return Response({
+            "error_msg": "Incorrect details entered."
+        }, status=401)
 
 
 @api_view(['POST'])
@@ -75,9 +83,9 @@ def prescriptionsByUser(request, pk):
     REST endpoint to fetch all prescriptions of a particular user
     '''
     if request.user.id != pk and not perms(request):
-        return Response(
-            "Not Authorized to access Prescriptions.",
-            status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     try:
         user = User.objects.get(id=pk)
         appointments = Appointment.objects.filter(user=user)
@@ -86,7 +94,9 @@ def prescriptionsByUser(request, pk):
         serializer = PrescriptionSerializer(data, many=True)
         return Response(serializer.data)
     except ObjectDoesNotExist:
-        return Response("User not found", status=404)
+        return Response({
+            "error_msg": "User does not exist."
+        }, status=404)
 
 
 @api_view(['GET'])
@@ -96,9 +106,9 @@ def prescriptionsByUserAppointment(request, pk, a_pk):
     REST endpoint to get all prescriptions for a user's appointment
     '''
     if request.user.id != pk and not perms(request):
-        return Response(
-            "Not Authorized to access Prescriptions.",
-            status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     try:
         appointment = Appointment.objects.get(id=a_pk)
         diagnoses = Diagnosis.objects.filter(appointment=appointment)
@@ -107,4 +117,6 @@ def prescriptionsByUserAppointment(request, pk, a_pk):
         serializer = PrescriptionSerializer(data, many=True)
         return Response(serializer.data)
     except ObjectDoesNotExist:
-        return Response("User not found", status=404)
+        return Response({
+            "error_msg": "Appointment does not exist."
+        }, status=404)

@@ -22,7 +22,9 @@ def documents(request):
     REST Framework view to fetch all documents
     '''
     if not perms(request):
-        return Response("Not Authorized to access Documents.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     data = Document.objects.all()
     serializer = DocumentSerializer(data, many=True)
     return Response(serializer.data)
@@ -35,14 +37,16 @@ def document(request, pk):
     REST endpoint to fetch, update or delete a specific appointment
     '''
     if not perms(request):
-        return Response("Not Authorized to access Document.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     try:
         data = Document.objects.get(id=pk)
         # accessing document file
         if request.method == 'GET':
             file = data.file
             return FileResponse(file)
-        # # altering appointment info
+        # TODO: Add Document upload functionality
         # if request.method == 'POST':
         #     serializer = AppointmentSerializer(
         #         instance=data, data=request.data)

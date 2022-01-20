@@ -67,8 +67,7 @@ def register(request):
         return Response(response)
     print(serializer.errors, "\n\n")
     return Response({
-        "error": True,
-        "error_msg": "Invalid details"
+        "error_msg": "Invalid details entered!"
     }, status=403)
 
 
@@ -81,7 +80,6 @@ def verifyIfRegistered(request):
     userType = checkUserType(email)
     if userType is None:
         return Response({
-            "error": True,
             "error_msg": "User is not from NITK Domain!"
         }, status=403)
     try:
@@ -94,8 +92,8 @@ def verifyIfRegistered(request):
                 "id": user.id,
                 "user_type": userType
             })
+        # ERROR: This is an error with the system that will be resolved with IRIS OAuth
         return Response({
-            "error": True,
             "error_msg": "Invalid Login Credentials. \
                 If you think this is an issue, contact the HCC Admin."
         }, status=403)
@@ -148,6 +146,5 @@ def logout(request):
         return Response({"logged_out": True}, status=200)
     except:
         return Response({
-            "error": True,
             "error_msg": "Could not log the user out successfully!"
         }, status=500)

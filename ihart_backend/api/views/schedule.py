@@ -22,7 +22,9 @@ def schedules(request):
     REST endpoint to fetch all schedules
     '''
     if not perms(request):
-        return Response("Not Authorized to access Schedules.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     data = Schedule.objects.all()
     serializer = ScheduleSerializer(data, many=True)
     return Response(serializer.data)
@@ -35,7 +37,9 @@ def schedule(request, pk):
     REST endpoint to fetch, update or delete a specific schedule
     '''
     if request.user.id != pk and not perms(request):
-        return Response("Not Authorized to access schedule.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     try:
         data = Schedule.objects.get(id=pk)
         if request.method == 'GET':
@@ -50,9 +54,13 @@ def schedule(request, pk):
             data.delete()
             return Response("Schedule deleted successfully!", status=200)
     except ObjectDoesNotExist:
-        return Response("Schedule not found!", status=404)
+        return Response({
+            "error_msg": "Schedule does not exist."
+        }, status=404)
     except APIException:
-        return Response("Invalid data submitted!")
+        return Response({
+            "error_msg": "Invalid data submitted."
+        }, status=401)
 
 
 @api_view(['POST'])
@@ -74,13 +82,15 @@ def schedulesByUser(request, pk):
     REST endpoint to get all schedules for a particular user
     '''
     if request.user.id != pk and not perms(request):
-        return Response(
-            "Not Authorized to access Schedules.",
-            status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     try:
         user = User.objects.get(id=pk)
         data = Schedule.objects.filter(user=user)
         serializer = ScheduleSerializer(data, many=True)
         return Response(serializer.data)
     except ObjectDoesNotExist:
-        return Response("User not found", status=404)
+        return Response({
+            "error_msg": "User does not exist."
+        }, status=404)

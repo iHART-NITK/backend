@@ -21,7 +21,9 @@ def users(request):
     REST endpoint to fetch all users
     '''
     if not perms(request):
-        return Response("Not Authorized to access profiles.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     allUsers = User.objects.all()
     serializer = UserSerializer(allUsers, many=True)
     return Response(serializer.data)
@@ -34,7 +36,9 @@ def user(request, pk):
     REST endpoint to fetch, update or delete a particular user
     '''
     if request.user.id != pk and not perms(request):
-        return Response("Not Authorized to access profile.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     try:
         getUser = User.objects.get(id=pk)
         if request.method == 'GET':
@@ -49,4 +53,6 @@ def user(request, pk):
             getUser.delete()
             return Response("User deleted successfully!", status=200)
     except ObjectDoesNotExist:
-        return Response("User not found", status=404)
+        return Response({
+            "error_msg": "User does not exist."
+        }, status=404)

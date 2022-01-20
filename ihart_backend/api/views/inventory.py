@@ -22,7 +22,9 @@ def inventories(request):
     REST endpoint to fetch all inventory objects
     '''
     if not perms(request):
-        return Response("Not Authorized to access inventories.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     data = Inventory.objects.all()
     serializer = InventorySerializer(data, many=True)
     return Response(serializer.data)
@@ -35,7 +37,9 @@ def inventory(request, pk):
     REST endpoint to fetch, update or delete a specific inventory object
     '''
     if request.user.id != pk and not perms(request):
-        return Response("Not Authorized to access inventory.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     try:
         data = Inventory.objects.get(id=pk)
         if request.method == 'GET':
@@ -50,9 +54,13 @@ def inventory(request, pk):
             data.delete()
             return Response("Inventory deleted successfully!", status=200)
     except ObjectDoesNotExist:
-        return Response("Inventory not found!", status=404)
+        return Response({
+            "error_msg": "Inventory does not exist."
+        }, status=404)
     except APIException:
-        return Response("Invalid details submitted!", status=401)
+        return Response({
+            "error_msg": "Incorrect details entered."
+        }, status=401)
 
 
 @api_view(['POST'])

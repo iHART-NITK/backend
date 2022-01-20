@@ -22,7 +22,9 @@ def diagnoses(request):
     REST endpoint to fetch all diagnoses
     '''
     if not perms(request):
-        return Response("Not Authorized to access diagnoses.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     data = Diagnosis.objects.all()
     serializer = DiagnosisSerializer(data, many=True)
     return Response(serializer.data)
@@ -35,7 +37,9 @@ def diagnosis(request, pk):
     REST endpoint to get, update or delete a particular diagnosis
     '''
     if request.user.id != pk and not perms(request):
-        return Response("Not Authorized to access Diagnosis.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     try:
         data = Diagnosis.objects.get(id=pk)
         if request.method == 'GET':
@@ -50,9 +54,13 @@ def diagnosis(request, pk):
             data.delete()
             return Response("DIagnosis deleted successfully!", status=200)
     except ObjectDoesNotExist:
-        return Response("Diagnosis not found!", status=404)
+        return Response({
+            "error_msg": "Diagnosis not found!"
+        }, status=404)
     except APIException:
-        return Response("Invalid data submitted!", status=401)
+        return Response({
+            "error_msg": "Invalid data submitted!"
+            }, status=401)
 
 
 @api_view(['POST'])
@@ -74,9 +82,9 @@ def diagnosesByUser(request, pk):
     REST endpoint to get all diagnoses for a given user
     '''
     if request.user.id != pk and not perms(request):
-        return Response(
-            "Not Authorized to access Diagnoses.",
-            status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     try:
         user = User.objects.get(id=pk)
         appointments = Appointment.objects.filter(user=user)
@@ -84,4 +92,6 @@ def diagnosesByUser(request, pk):
         serializer = DiagnosisSerializer(data, many=True)
         return Response(serializer.data)
     except ObjectDoesNotExist:
-        return Response("User not found", status=404)
+        return Response({
+            "error_msg": "User not found"
+        }, status=404)

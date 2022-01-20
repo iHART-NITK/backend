@@ -23,9 +23,10 @@ def locations(request):
     This function can be deprecated by using geolocation services
     '''
     if not perms(request):
-        return Response("Not Authorized to access Locations.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     data = Emergency.LOCATION_CHOICES
-    # return Response(converters.(data, {}))
     locationHash = {}
     for abbr, loc in data:
         locationHash.setdefault(abbr, loc)
@@ -39,7 +40,9 @@ def location(request, pk):
     REST Endpoint to fetch a particular location
     '''
     if not perms(request):
-        return Response("Not Authorized to access Locations.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     data = Emergency.LOCATION_CHOICES[pk]
     return Response(data)
 
@@ -51,9 +54,9 @@ def emergencies(request):
     REST Endpoint to fetch all emergencies
     '''
     if not perms(request):
-        return Response(
-            "Not Authorized to access Medical Histories.",
-            status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     data = Emergency.objects.all()
     serializer = EmergencySerializer(data, many=True)
     return Response(serializer.data)
@@ -81,13 +84,15 @@ def emergenciesByUser(request, pk):
     REST endpoint to fetch all emergencies by a specific user
     '''
     if request.user.id != pk and not perms(request):
-        return Response(
-            "Not Authorized to access Emergencies.",
-            status=401)
+        return Response({
+                "error_msg": "You do not have permission to perform this action."
+            }, status=401)
     try:
         user = User.objects.get(id=pk)
         data = Emergency.objects.filter(user=user)
         serializer = EmergencySerializer(data, many=True)
         return Response(serializer.data)
     except ObjectDoesNotExist:
-        return Response("User not found", status=404)
+        return Response({
+            "error_msg": "User not found"
+        }, status=404)

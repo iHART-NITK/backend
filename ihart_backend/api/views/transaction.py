@@ -22,7 +22,9 @@ def transactions(request):
     REST endpoint to fetch all transactions
     '''
     if not perms(request):
-        return Response("Not Authorized to access transactions.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     data = Transaction.objects.all()
     serializer = TransactionSerializer(data, many=True)
     return Response(serializer.data)
@@ -35,7 +37,9 @@ def transaction(request, pk):
     REST endpoint to fetch, update or delete a specific transaction
     '''
     if request.user.id != pk and not perms(request):
-        return Response("Not Authorized to access transaction.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     try:
         data = Transaction.objects.get(id=pk)
         if request.method == 'GET':
@@ -51,9 +55,13 @@ def transaction(request, pk):
             data.delete()
             return Response("Transaction deleted successfully!", status=200)
     except ObjectDoesNotExist:
-        return Response("Transaction not found!", status=404)
+        return Response({
+            "error_msg": "Transaction does not exist."
+        }, status=404)
     except APIException:
-        return Response("Invalid data submitted!", status=401)
+        return Response({
+            "error_msg": "Incorrect details entered."
+        }, status=401)
 
 
 @api_view(['POST'])
@@ -75,8 +83,9 @@ def transactionsByUser(request, pk):
     REST endpoint to fetch all transactions for a specific user
     '''
     if request.user.id != pk and not perms(request):
-        return Response(
-            "Not Authorized to access Transactions.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     try:
         user = User.objects.get(id=pk)
         appointments = Appointment.objects.filter(user=user)
@@ -86,4 +95,6 @@ def transactionsByUser(request, pk):
         serializer = TransactionSerializer(data, many=True)
         return Response(serializer.data)
     except ObjectDoesNotExist:
-        return Response("User not found", status=404)
+        return Response({
+            "error_msg": "User does not exist."
+        }, status=404)

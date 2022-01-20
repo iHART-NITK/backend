@@ -22,7 +22,9 @@ def appointments(request):
     REST Framework view to fetch all appointments
     '''
     if not perms(request):
-        return Response("Not Authorized to access Appointments.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=403)
     data = Appointment.objects.all()
     serializer = MedicalHistorySerializer(data, many=True)
     return Response(serializer.data)
@@ -35,7 +37,9 @@ def appointment(request, pk):
     REST endpoint to fetch, update or delete a specific appointment
     '''
     if request.user.id != pk and not perms(request):
-        return Response("Not Authorized to access Appointment.", status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=403)
     try:
         data = Appointment.objects.get(id=pk)
         # accessing appointment info
@@ -54,9 +58,13 @@ def appointment(request, pk):
             data.delete()
             return Response("Appointment deleted successfully!", status=200)
     except ObjectDoesNotExist:
-        return Response("Appointment not found!", status=404)
+        return Response({
+            "error_msg": "Appointment not found!"
+        }, status=404)
     except APIException:
-        return Response("Invalid Data entered!", status=401)
+        return Response({
+            "error_msg": "Invalid Data entered!"
+        }, status=401)
 
 
 @api_view(['POST'])
@@ -78,9 +86,9 @@ def appointmentsByUser(request, pk):
     REST endpoint to fetch all appointments for a user
     '''
     if request.user.id != pk and not perms(request):
-        return Response(
-            "Not Authorized to access Appointments.",
-            status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     try:
         user = User.objects.get(id=pk)
         data = Appointment.objects.filter(
@@ -88,4 +96,6 @@ def appointmentsByUser(request, pk):
         serializer = AppointmentSerializer(data, many=True)
         return Response(serializer.data)
     except ObjectDoesNotExist:
-        return Response("User not found", status=404)
+        return Response({
+            "error_msg": "User not found"
+            }, status=404)

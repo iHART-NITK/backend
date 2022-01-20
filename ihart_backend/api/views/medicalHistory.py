@@ -26,9 +26,9 @@ def medicalHistories(request):
     REST endpoint to fetch all medical histories
     '''
     if not perms(request):
-        return Response(
-            "Not Authorized to access Medical Histories.",
-            status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     data = MedicalHistory.objects.all()
     serializer = MedicalHistorySerializer(data, many=True)
     return Response(serializer.data)
@@ -41,9 +41,9 @@ def medicalHistory(request, pk):
     REST endpoint to fetch the medical history of a specific user
     '''
     if request.user.id != pk and not perms(request):
-        return Response(
-            "Not Authorized to access Medical History.",
-            status=401)
+        return Response({
+            "error_msg": "You do not have permission to perform this action."
+        }, status=401)
     try:
         data = MedicalHistory.objects.filter(id=pk)
         if request.method == 'GET':
@@ -61,9 +61,13 @@ def medicalHistory(request, pk):
                 "Medical history deleted successfully!",
                 status=200)
     except ObjectDoesNotExist:
-        return Response("Medical History not found!", status=404)
+        return Response({
+            "error_msg": "Medical history does not exist."
+        }, status=404)
     except APIException:
-        return Response("Invalid data sent!", status=401)
+        return Response({
+            "error_msg": "Incorrect details entered."
+        }, status=401)
 
 
 
@@ -90,16 +94,18 @@ def medicalHistoriesByUser(request, pk):
     REST endpoint to fetch all medical history objects of a particular user
     '''
     if request.user.id != pk and not perms(request):
-        return Response(
-            "Not Authorized to access Medical Histories.",
-            status=401)
+        return Response({
+                "error_msg": "You do not have permission to perform this action."
+            }, status=401)
     try:
         user = User.objects.get(id=pk)
         data = MedicalHistory.objects.filter(user=user)
         serializer = MedicalHistorySerializer(data, many=True)
         return Response(serializer.data)
     except ObjectDoesNotExist:
-        return Response("User not found", status=404)
+        return Response({
+            "error_msg": "User does not exist."
+        }, status=404)
 
 @api_view(['GET'])
 def medicalHistoryByUserHtml(request, pk):
@@ -110,7 +116,6 @@ def medicalHistoryByUserHtml(request, pk):
     shaHash.update(token.encode('utf-8'))
     if (hashedToken != shaHash.hexdigest()):
         return Response({
-            "error": True,
             "error_msg": "Hashes do not match!"
         }, status=403)
 
